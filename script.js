@@ -3,7 +3,7 @@ let currentPlaylist = [];
 let currentVideoIndex = 0;
 let isPlayerReady = false;
 
-const apiKey = 'YOUR_API_KEY'; // Replace with your actual YouTube API key
+const apiKey = 'AIzaSyAF0WI0zfh8wxf4Vzu4ucKPQBG8eTGrHbo'; // Replace with your actual YouTube API key
 
 function loadYouTubeAPI() {
   return new Promise((resolve) => {
