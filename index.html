@@ -1,26 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>HFC Kiosk</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div id="header">
     <div id="logo">
-      <img src="hfc_logo.svg" alt="HFC Logo">
+      <img src="hfc_logo.svg" alt="HFC Logo" />
     </div>
-
-   <div id="playlistControls"></div>
-  </div>
-    
+    <div id="playlistControls"></div>
     <div id="controls">
-      <button onclick="adjustFontSize(-1)">A- <span class="icon-label">Reduce Text</span></button>
-      <button onclick="adjustFontSize(1)">A+ <span class="icon-label">Increase Text</span></button>
-      <button onclick="location.reload()">↻ <span class="icon-label">Reload</span></button>
+      <button onclick="adjustFontSize(-1)">A-<span class="icon-label">Reduce Text</span></button>
+      <button onclick="adjustFontSize(1)">A+<span class="icon-label">Increase Text</span></button>
+      <button onclick="location.reload()">⟳<span class="icon-label">Reload</span></button>
     </div>
- 
+  </div>
 
   <div id="mainContent">
     <div id="playerPane">
@@ -29,9 +26,9 @@
     <div id="playlistPane">
       <div id="playlistVideos"></div>
       <div class="playback-controls">
-        <button onclick="previousVideo()">⏮️<span class="icon-label">Previous</span></button>
-        <button onclick="togglePlayPause()">⏯️<span class="icon-label">Play/Pause</span></button>
-        <button onclick="nextVideo()">⏭️<span class="icon-label">Next</span></button>
+        <button onclick="previousVideo()">⏮<span class="icon-label">Previous</span></button>
+        <button onclick="togglePlayPause()">⏯<span class="icon-label">Play/Pause</span></button>
+        <button onclick="nextVideo()">⏭<span class="icon-label">Next</span></button>
       </div>
     </div>
   </div>
