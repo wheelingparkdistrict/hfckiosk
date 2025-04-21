@@ -1,151 +1,72 @@
-const playlists = [
-  { id: "PLRdkgOpCgKLCHW0LepxgvtZhCPAKpA_ph", title: "Barre" },
-  { id: "PLRdkgOpCgKLAMNCxMO2C1_UqUJWOxhfFG", title: "Full Body" },
-  { id: "PLRdkgOpCgKLDpQ0yMrjs_UG0YgYkR7vKl", title: "Cardio HIIT" }
-];
-
-let currentPlaylist = playlists[0];
-let player;
+const apiKey = 'AIzaSyBXOnPb8MKxBE1pT6SYvdQdX_87350Nk9g';
+let currentPlaylist = [];
 let currentVideoIndex = 0;
 
-function loadYouTubeAPI() {
-  const tag = document.createElement('script');
-  tag.src = "https://www.youtube.com/iframe_api";
-  document.head.appendChild(tag);
-}
+async function loadPlaylists() {
+  const response = await fetch('data.json');
+  const playlists = await response.json();
 
-function onYouTubeIframeAPIReady() {
-  player = new YT.Player('playerPane', {
-    height: '100%',
-    width: '100%',
-    videoId: '',
-    playerVars: {
-      autoplay: 0,
-      modestbranding: 1
-    },
-    events: {
-      'onReady': loadPlaylist
-    }
+  playlists.forEach(playlist => {
+    const btn = document.createElement('button');
+    btn.textContent = playlist.name;
+    btn.onclick = () => loadPlaylist(playlist.id);
+    document.getElementById('playlistControls').appendChild(btn);
+
+    if (playlist.default) loadPlaylist(playlist.id);
   });
 }
 
-async function loadPlaylist(playlistId) {
-  try {
-    const response = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${playlistId}&maxResults=50&key=${apiKey}`);
-    
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    renderPlaylistItems(data.items || []);
-  } catch (error) {
-    console.error("Playlist load error:", error);
-    // Optional: display a user-friendly message
-  }
-}
-
-function renderPlaylistItems(items) {
-  const playlistPane = document.getElementById('playlistPane');
-  playlistPane.innerHTML = '';  // Clear existing items
-
-  if (!items.length) {
-    playlistPane.innerHTML = '<p>No videos found.</p>';
+async function loadPlaylist(id) {
+  const res = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${id}&maxResults=50&key=${apiKey}`);
+  if (!res.ok) {
+    alert('Failed to load playlist');
     return;
   }
+  const data = await res.json();
+  currentPlaylist = data.items;
+  currentVideoIndex = 0;
+  renderPlaylistItems();
+  loadVideo(currentVideoIndex);
+}
 
-  items.forEach(item => {
-    const videoId = item.snippet.resourceId.videoId;
-    const title = item.snippet.title;
-    const thumbnailUrl = item.snippet.thumbnails.default.url;
-
+function renderPlaylistItems() {
+  const container = document.getElementById('playlistVideos');
+  container.innerHTML = '';
+  currentPlaylist.forEach((item, idx) => {
     const div = document.createElement('div');
     div.className = 'playlist-video';
+    div.onclick = () => loadVideo(idx);
     div.innerHTML = `
-      <img src="${thumbnailUrl}" alt="${title}">
-      <span>${title}</span>
+      <img src="${item.snippet.thumbnails.default.url}">
+      <span>${item.snippet.title}</span>
     `;
-    div.onclick = () => loadVideo(videoId);
-    playlistPane.appendChild(div);
+    container.appendChild(div);
   });
-
-  // Ensure playback controls stay anchored
-  const controls = document.createElement('div');
-  controls.className = 'playback-controls';
-  controls.innerHTML = `
-    <button onclick="previousVideo()">⏮ Previous</button>
-    <button onclick="togglePlayPause()">⏯ Play/Pause</button>
-    <button onclick="nextVideo()">⏭ Next</button>
-  `;
-  playlistPane.appendChild(controls);
 }
 
-
-function renderPlaylistItems(items) {
-  const playlistPane = document.getElementById('playlistPane');
-  playlistPane.innerHTML = '';
-
-  items.forEach((item, index) => {
-    const videoElem = document.createElement('div');
-    videoElem.className = 'playlist-video';
-    videoElem.innerHTML = `
-      <img src="${item.snippet.thumbnails.medium.url}">
-      <div>${item.snippet.title}</div>`;
-    videoElem.onclick = () => {
-      currentVideoIndex = index;
-      player.loadVideoById(item.snippet.resourceId.videoId);
-    };
-    playlistPane.appendChild(videoElem);
-  });
-
-  anchorPlaybackControls();
+function loadVideo(index) {
+  currentVideoIndex = index;
+  const videoId = currentPlaylist[index].snippet.resourceId.videoId;
+  document.getElementById('videoPlayer').src = `https://www.youtube-nocookie.com/embed/${videoId}?controls=1&autoplay=0`;
 }
 
-function anchorPlaybackControls() {
-  const playbackControls = document.querySelector('.playback-controls');
-  document.getElementById('playlistPane').appendChild(playbackControls);
-}
-
-function changePlaylist(index) {
-  currentPlaylist = playlists[index];
-  loadPlaylist();
-}
-
-// playback controls
 function previousVideo() {
-  if (currentVideoIndex > 0) {
-    currentVideoIndex--;
-    player.loadVideoById(player.getPlaylist()[currentVideoIndex]);
-  }
-}
-
-function playPauseVideo() {
-  if (player.getPlayerState() === YT.PlayerState.PLAYING) {
-    player.pauseVideo();
-  } else {
-    player.playVideo();
-  }
+  if (currentVideoIndex > 0) loadVideo(--currentVideoIndex);
 }
 
 function nextVideo() {
-  currentVideoIndex++;
-  player.nextVideo();
+  if (currentVideoIndex < currentPlaylist.length - 1) loadVideo(++currentVideoIndex);
 }
 
-// font resizing
-let currentFontSizeIndex = 1;
-const fontSizes = ['14px', '16px', '18px', '20px', '22px'];
-
-function adjustFontSize(direction) {
-  currentFontSizeIndex = Math.max(0, Math.min(fontSizes.length - 1, currentFontSizeIndex + direction));
-  document.getElementById('playlistPane').style.fontSize = fontSizes[currentFontSizeIndex];
+function togglePlayPause() {
+  const iframe = document.getElementById('videoPlayer');
+  iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
 }
 
-function reloadPage() {
-  location.reload();
+function adjustFontSize(step) {
+  const playlistPane = document.getElementById('playlistPane');
+  const currentSize = parseFloat(window.getComputedStyle(playlistPane).fontSize);
+  playlistPane.style.fontSize = `${currentSize + step}px`;
 }
 
-// initialize
-document.addEventListener('DOMContentLoaded', () => {
-  loadYouTubeAPI();
-});
+window.onload = loadPlaylists;
