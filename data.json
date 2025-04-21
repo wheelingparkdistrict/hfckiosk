@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Barre",
+    "id": "PLRdkgOpCgKLCHW0LepxgvtZhCPAKpA_ph",
+    "default": true
+  },
+  {
+    "name": "Full Body",
+    "id": "PLRdkgOpCgKLAMNCxMO2C1_UqUJWOxhfFG",
+    "default": false
+  },
+  {
+    "name": "Cardio HIIT",
+    "id": "PLRdkgOpCgKLDpQ0yMrjs_UG0YgYkR7vKl",
+    "default": false
+  }
+]
