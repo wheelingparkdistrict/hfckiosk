@@ -5,37 +5,33 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HFC Kiosk</title>
   <link rel="stylesheet" href="style.css">
-  <script src="https://www.youtube.com/iframe_api"></script>
 </head>
 <body>
-<div id="header">
-  <div id="logo"><img src="hfc_logo.svg" alt="HFC Logo"></div>
-  <div id="controls">
-    <button onclick="adjustFontSize(-1)"><span>A-</span> Reduce Text</button>
-    <button onclick="adjustFontSize(1)"><span>A+</span> Increase Text</button>
-    <button onclick="reloadPage()"><span>⟳</span> Reload</button>
+  <div id="header">
+    <div id="logo">
+      <img src="hfc_logo.svg" alt="HFC Logo">
+    </div>
+    <div id="controls">
+      <button onclick="adjustFontSize(-1)">A- <span class="icon-label">Reduce Text</span></button>
+      <button onclick="adjustFontSize(1)">A+ <span class="icon-label">Increase Text</span></button>
+      <button onclick="location.reload()">↻ <span class="icon-label">Reload</span></button>
+    </div>
+    <div id="playlistControls"></div>
   </div>
-  <div id="playlistControls">
-    <button onclick="changePlaylist(0)">Barre</button>
-    <button onclick="changePlaylist(1)">Full Body</button>
-    <button onclick="changePlaylist(2)">Cardio HIIT</button>
-  </div>
-</div>
 
-
-  <main id="mainContent">
+  <div id="mainContent">
     <div id="playerPane">
-      <div id="player"></div>
+      <iframe id="videoPlayer" width="100%" height="100%" src="" frameborder="0" allowfullscreen></iframe>
     </div>
     <div id="playlistPane">
-      <div id="playlistBrowser"></div>
+      <div id="playlistVideos"></div>
       <div class="playback-controls">
-        <button onclick="previousVideo()">⏮<br><small>Previous</small></button>
-        <button onclick="togglePlayPause()">⏯<br><small>Play/Pause</small></button>
-        <button onclick="nextVideo()">⏭<br><small>Next</small></button>
+        <button onclick="previousVideo()">⏮️<span class="icon-label">Previous</span></button>
+        <button onclick="togglePlayPause()">⏯️<span class="icon-label">Play/Pause</span></button>
+        <button onclick="nextVideo()">⏭️<span class="icon-label">Next</span></button>
       </div>
     </div>
-  </main>
+  </div>
 
   <script src="script.js"></script>
 </body>
