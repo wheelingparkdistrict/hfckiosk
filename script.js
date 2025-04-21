@@ -112,3 +112,6 @@ function adjustFontSize(step) {
   const size = parseFloat(window.getComputedStyle(pane).fontSize);
   pane.style.fontSize = `${size + step}px`;
 }
+function fullReload() {
+  window.location.href = window.location.href;
+}
