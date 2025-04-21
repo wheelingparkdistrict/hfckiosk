@@ -28,6 +28,28 @@ async function loadPlaylists() {
   const response = await fetch('data.json');
   const playlists = await response.json();
   const container = document.getElementById('playlistButtons');
+async function fetchVideoDurations(videoIds) {
+  const ids = videoIds.join(',');
+  const response = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${ids}&key=${apiKey}`);
+  const data = await response.json();
+  const durations = {};
+  data.items.forEach(video => {
+    durations[video.id] = formatDuration(video.contentDetails.duration);
+  });
+  return durations;
+}
+
+function formatDuration(iso) {
+  const match = iso.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
+  const h = (parseInt(match[1]) || 0);
+  const m = (parseInt(match[2]) || 0);
+  const s = (parseInt(match[3]) || 0);
+
+  const totalSec = h * 3600 + m * 60 + s;
+  const mins = Math.floor(totalSec / 60);
+  const secs = totalSec % 60;
+  return `${mins}:${secs.toString().padStart(2, '0')}`;
+}
 
   playlists.forEach(pl => {
     const btn = document.createElement('button');
