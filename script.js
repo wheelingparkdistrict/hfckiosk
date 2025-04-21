@@ -2,6 +2,7 @@ let player;
 let currentPlaylist = [];
 let currentVideoIndex = 0;
 let isPlayerReady = false;
+
 const apiKey = 'AIzaSyAF0WI0zfh8wxf4Vzu4ucKPQBG8eTGrHbo'; // Replace with your real key
 
 function onYouTubeIframeAPIReady() {
