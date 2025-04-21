@@ -119,37 +119,39 @@ button:hover {
 
 .playlist-video {
   display: flex;
+  justify-content: space-between;
   align-items: center;
   gap: 10px;
-  padding: 5px;
+  padding: 6px 8px;
   cursor: pointer;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  transition: background-color 0.2s ease;
 }
 
 .playlist-video:hover {
   background-color: #505050;
 }
 
-.playlist-video img {
-  width: 120px;
-  height: auto;
-  border-radius: 3px;
+.playlist-video.now-playing {
+  background-color: #007B86;
+  border-left: 5px solid #00c8d7;
 }
 
 .video-info {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  text-align: right;
+  flex-grow: 1;
 }
 
 .video-title {
   font-weight: bold;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
 }
 
 .video-duration {
-  font-size: 0.75rem;
-  color: #ccc;
+  font-size: 0.8rem;
+  color: #ddd;
 }
 .playback-controls {
   display: flex;
