@@ -74,8 +74,16 @@ function nextVideo() {
 
 function togglePlayPause() {
   const iframe = document.getElementById('videoPlayer');
-  iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+  iframe.contentWindow.postMessage(
+    JSON.stringify({
+      event: 'command',
+      func: 'playVideo',
+      args: []
+    }),
+    '*'
+  );
 }
+
 
 function adjustFontSize(step) {
   const el = document.getElementById('playlistPane');
