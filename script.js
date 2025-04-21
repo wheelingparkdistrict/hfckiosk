@@ -119,5 +119,6 @@ function adjustFontSize(step) {
 }
 
 function fullReload() {
-  window.location.href = window.location.href;
+  window.location.replace(window.location.href);
 }
+
