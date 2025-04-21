@@ -83,8 +83,15 @@ function loadVideo(index) {
   } else {
     setTimeout(() => loadVideo(index), 200);
   }
-} else {
-    setTimeout(() => loadVideo(index), 200);
+}
+
+function cueVideo(index) {
+  currentVideoIndex = index;
+  const videoId = currentPlaylist[index].snippet.resourceId.videoId;
+  if (isPlayerReady && player && player.cueVideoById) {
+    player.cueVideoById(videoId);
+  } else {
+    setTimeout(() => cueVideo(index), 200);
   }
 }
 
@@ -101,7 +108,6 @@ function nextVideo() {
     loadVideo(currentVideoIndex);
   }
 }
-}
 
 function togglePlayPause() {
   if (!player || !isPlayerReady) return;
@@ -116,16 +122,6 @@ function togglePlayPause() {
 function adjustFontSize(step) {
   const pane = document.getElementById('playlistPane');
   const size = parseFloat(window.getComputedStyle(pane).fontSize);
-  const newSize = Math.min(Math.max(size + step, 12), 24); // Clamp between 12px and 24px
+  const newSize = Math.min(Math.max(size + step, 12), 24);
   pane.style.fontSize = `${newSize}px`;
-}px`;
-}
-function cueVideo(index) {
-  currentVideoIndex = index;
-  const videoId = currentPlaylist[index].snippet.resourceId.videoId;
-  if (isPlayerReady && player && player.cueVideoById) {
-    player.cueVideoById(videoId);
-  } else {
-    setTimeout(() => cueVideo(index), 200);
-  }
 }
