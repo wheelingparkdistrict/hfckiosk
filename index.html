@@ -20,25 +20,34 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      height: 50px;
+      height: 60px;
     }
     #logo {
       height: 100%;
     }
-    #controls button {
-      background: transparent;
+    #playlistButtons button, #controls button, #playbackControls button {
+      background: #0099A8;
       color: #fff;
       border: none;
-      font-size: 1rem;
+      border-radius: 5px;
+      padding: 5px;
+      margin-left: 5px;
       cursor: pointer;
-      margin-left: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      width: 70px;
+      height: 70px;
     }
-    #controls button.large {
-      font-size: 1.2rem;
+    #playlistButtons span {
+      font-variant: small-caps;
+      margin-right: 10px;
     }
     main {
       display: flex;
-      height: calc(100% - 50px);
+      height: calc(100% - 60px);
     }
     #playerPane {
       flex-grow: 1;
@@ -50,6 +59,7 @@
       padding: 10px;
       background-color: rgba(0,0,0,0.3);
       position: relative;
+      font-size: 1rem;
     }
     .videoItem {
       display: flex;
@@ -64,98 +74,69 @@
     }
     #playbackControls {
       position: absolute;
-      bottom: 10px;
+      bottom: 20px;
       left: 0;
       width: 100%;
-      text-align: center;
-    }
-    #playbackControls button {
-      background: transparent;
-      color: #fff;
-      border: none;
-      font-size: 1.5rem;
-      cursor: pointer;
-      margin: 0 10px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
     }
   </style>
 </head>
 <body>
 <header>
   <img id="logo" src="hfc_logo.svg" alt="HFC Logo">
+  <div id="playlistButtons">
+    <span>Select a Playlist</span>
+    <button onclick="loadPlaylist('PLRdkgOpCgKLCHW0LepxgvtZhCPAKpA_ph')">Barre</button>
+    <button onclick="loadPlaylist('PLRdkgOpCgKLAMNCxMO2C1_UqUJWOxhfFG')">Full Body</button>
+    <button onclick="loadPlaylist('PLRdkgOpCgKLDpQ0yMrjs_UG0YgYkR7vKl')">Cardio HIIT</button>
+  </div>
   <div id="controls">
-    <button id="fontDown">A-</button>
-    <button id="fontUp" class="large">A+</button>
-    <button id="reload">⟳ Reload</button>
+    <button id="fontDown">A-<span>Reduce Text</span></button>
+    <button id="fontUp">A+<span>Increase Text</span></button>
+    <button id="reload">⟳<span>Reload Page</span></button>
   </div>
 </header>
 
 <main>
   <div id="playerPane">
-    <iframe id="player" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>
+    <iframe id="player" width="100%" height="100%" frameborder="0" allowfullscreen src="https://www.youtube-nocookie.com/embed/?autoplay=0"></iframe>
   </div>
-  <div id="playlistPane"></div>
+  <div id="playlistPane">
+    <div id="playbackControls">
+      <button id="prev">⏮️<span>Previous</span></button>
+      <button id="playpause">⏯️<span>Play/Pause</span></button>
+      <button id="next">⏭️<span>Next</span></button>
+    </div>
+  </div>
 </main>
 
 <script>
-  const playlists = [
-    {name: "Barre", id: "PLRdkgOpCgKLCHW0LepxgvtZhCPAKpA_ph"},
-    {name: "Full Body", id: "PLRdkgOpCgKLAMNCxMO2C1_UqUJWOxhfFG"},
-    {name: "Cardio HIIT", id: "PLRdkgOpCgKLDpQ0yMrjs_UG0YgYkR7vKl"}
-  ];
-
-  let videos = [];
-  let currentIndex = 0;
-
-  function loadPlaylist(playlistId) {
-    fetch(`https://www.youtube.com/playlist?list=${playlistId}`)
-    .then(() => {
-      const iframe = document.getElementById('player');
-      iframe.src = `https://www.youtube-nocookie.com/embed/videoseries?list=${playlistId}&autoplay=0&controls=1&modestbranding=1`;
-    });
-  }
-
-  function renderPlaylist() {
-    const pane = document.getElementById('playlistPane');
-    pane.innerHTML = '';
-    playlists.forEach(pl => {
-      const div = document.createElement('div');
-      div.className = 'videoItem';
-      div.innerHTML = `
-        <img src="https://img.youtube.com/vi/${pl.id.split(',')[0]}/mqdefault.jpg">
-        <span>${pl.name}</span>
-      `;
-      div.onclick = () => loadPlaylist(pl.id);
-      pane.appendChild(div);
-    });
-    addPlaybackControls();
-  }
-
-  function addPlaybackControls() {
-    const controls = document.createElement('div');
-    controls.id = 'playbackControls';
-    controls.innerHTML = `
-      <button id="prev">⏮️</button>
-      <button id="playpause">⏯️</button>
-      <button id="next">⏭️</button>
-    `;
-    document.getElementById('playlistPane').appendChild(controls);
-    document.getElementById('playpause').onclick = () => document.getElementById('player').contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
-    document.getElementById('prev').onclick = () => document.getElementById('player').contentWindow.postMessage('{"event":"command","func":"previousVideo","args":""}', '*');
-    document.getElementById('next').onclick = () => document.getElementById('player').contentWindow.postMessage('{"event":"command","func":"nextVideo","args":""}', '*');
-  }
+  const fontSizes = ["0.8rem", "1rem", "1.2rem", "1.4rem"];
+  let currentFontSize = 1;
 
   document.getElementById('fontUp').onclick = () => {
-    document.getElementById('playlistPane').style.fontSize = 'larger';
+    if (currentFontSize < fontSizes.length - 1) currentFontSize++;
+    document.getElementById('playlistPane').style.fontSize = fontSizes[currentFontSize];
   };
 
   document.getElementById('fontDown').onclick = () => {
-    document.getElementById('playlistPane').style.fontSize = 'smaller';
+    if (currentFontSize > 0) currentFontSize--;
+    document.getElementById('playlistPane').style.fontSize = fontSizes[currentFontSize];
   };
 
   document.getElementById('reload').onclick = () => location.reload();
 
-  renderPlaylist();
-  loadPlaylist(playlists[0].id);
+  function loadPlaylist(playlistId) {
+    document.getElementById('player').src = `https://www.youtube-nocookie.com/embed/videoseries?list=${playlistId}&autoplay=0&controls=1&modestbranding=1`;
+  }
+
+  document.getElementById('playpause').onclick = () => document.getElementById('player').contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+  document.getElementById('prev').onclick = () => document.getElementById('player').contentWindow.postMessage('{"event":"command","func":"previousVideo","args":""}', '*');
+  document.getElementById('next').onclick = () => document.getElementById('player').contentWindow.postMessage('{"event":"command","func":"nextVideo","args":""}', '*');
+
+  loadPlaylist('PLRdkgOpCgKLCHW0LepxgvtZhCPAKpA_ph');
 </script>
 
 </body>
