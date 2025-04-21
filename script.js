@@ -113,5 +113,5 @@ function adjustFontSize(step) {
   pane.style.fontSize = `${size + step}px`;
 }
 function fullReload() {
-  window.location.replace(window.location.href);
+  window.location.reload();
 }
