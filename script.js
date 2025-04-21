@@ -3,19 +3,17 @@ let currentPlaylist = [];
 let currentVideoIndex = 0;
 let isPlayerReady = false;
 
-const apiKey = 'AIzaSyAF0WI0zfh8wxf4Vzu4ucKPQBG8eTGrHbo'; // Replace with your actual restricted key
+const apiKey = 'YOUR_API_KEY'; // Replace with your actual YouTube API key
 
-// Dynamically load the YouTube API and initialize the player
 function loadYouTubeAPI() {
   return new Promise((resolve) => {
     const tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api";
-    window.onYouTubeIframeAPIReady = () => {
-      resolve();
-    };
+    window.onYouTubeIframeAPIReady = () => resolve();
     document.head.appendChild(tag);
   });
 }
+
 function initYouTubePlayer() {
   player = new YT.Player('videoPlayer', {
     height: '100%',
@@ -24,7 +22,7 @@ function initYouTubePlayer() {
       modestbranding: 1,
       rel: 0,
       controls: 1,
-      autoplay: 0
+      autoplay: 0,
     },
     events: {
       onReady: () => {
@@ -35,17 +33,12 @@ function initYouTubePlayer() {
   });
 }
 
-// Kick everything off when the page loads
-window.onload = async () => {
-  await loadYouTubeAPI();
-  initYouTubePlayer();
-};
 async function loadPlaylists() {
   const response = await fetch('data.json');
   const playlists = await response.json();
   const container = document.getElementById('playlistButtons');
 
-  playlists.forEach((pl) => {
+  playlists.forEach(pl => {
     const btn = document.createElement('button');
     btn.textContent = pl.name;
     btn.onclick = () => loadPlaylist(pl.id);
@@ -56,9 +49,7 @@ async function loadPlaylists() {
 
 async function loadPlaylist(playlistId) {
   try {
-    const response = await fetch(
-      `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${playlistId}&maxResults=50&key=${apiKey}`
-    );
+    const response = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${playlistId}&maxResults=50&key=${apiKey}`);
     const data = await response.json();
 
     if (!data.items) throw new Error(data.error?.message || 'No videos returned');
@@ -69,8 +60,7 @@ async function loadPlaylist(playlistId) {
     loadVideo(currentVideoIndex);
   } catch (error) {
     console.error('Failed to load playlist:', error);
-    document.getElementById('playlistVideos').innerHTML =
-      '<p style="color:red;">Playlist failed to load.</p>';
+    document.getElementById('playlistVideos').innerHTML = '<p style="color:red;">Playlist failed to load.</p>';
   }
 }
 
@@ -138,3 +128,7 @@ function fullReload() {
   window.location.href = window.location.href;
 }
 
+window.onload = async () => {
+  await loadYouTubeAPI();
+  initYouTubePlayer();
+};
