@@ -20,7 +20,7 @@ function onYouTubeIframeAPIReady() {
         isPlayerReady = true;
         loadPlaylists();
     }
-  });
+  };
 }
 
 async function loadPlaylists() {
