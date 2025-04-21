@@ -124,5 +124,6 @@ function adjustFontSize(step) {
   pane.style.fontSize = `${size + step}px`;
 }
 function fullReload() {
-  window.location.reload(true); // still works in most browsers, cache-busting style
+  window.location.href = window.location.href;
 }
+
