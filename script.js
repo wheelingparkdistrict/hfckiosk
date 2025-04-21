@@ -1,27 +1,54 @@
- apiKey = 'AIzaSyAF0WI0zfh8wxf4Vzu4ucKPQBG8eTGrHbo'; // Replace with your restricted API key
+let player;
 let currentPlaylist = [];
 let currentVideoIndex = 0;
+const apiKey = 'YOUR_API_KEY'; // Replace with your actual key
 
-async function loadPlaylists() {
-  const response = await fetch('data.json');
-  const playlists = await response.json();
-  const container = document.getElementById('playlistButtons');
-
-  playlists.forEach((pl, index) => {
-    const btn = document.createElement('button');
-    btn.textContent = pl.name;
-    btn.onclick = () => loadPlaylist(pl.id);
-    container.appendChild(btn);
-    if (pl.default) loadPlaylist(pl.id);
+// YouTube API loader
+function onYouTubeIframeAPIReady() {
+  player = new YT.Player('videoPlayer', {
+    height: '100%',
+    width: '100%',
+    playerVars: {
+      modestbranding: 1,
+      rel: 0,
+      autoplay: 0,
+      controls: 1,
+      enablejsapi: 1,
+    },
+    events: {
+      onReady: () => loadPlaylists()
+    }
   });
 }
 
+// Load playlist metadata from JSON
+async function loadPlaylists() {
+  const response = await fetch('data.json');
+  const playlists = await response.json();
+  const container = document.getElementById('playlistControls');
+
+  const buttonRow = document.createElement('div');
+  buttonRow.classList.add('playlist-button-row');
+  buttonRow.id = 'playlistButtons';
+
+  playlists.forEach((pl) => {
+    const btn = document.createElement('button');
+    btn.textContent = pl.name;
+    btn.onclick = () => loadPlaylist(pl.id);
+    buttonRow.appendChild(btn);
+    if (pl.default) loadPlaylist(pl.id);
+  });
+
+  container.appendChild(buttonRow);
+}
+
+// Fetch videos from YouTube playlist
 async function loadPlaylist(playlistId) {
   try {
-    const response = await fetch(
+    const res = await fetch(
       `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${playlistId}&key=${apiKey}`
     );
-    const data = await response.json();
+    const data = await res.json();
 
     if (!data.items) throw new Error(data.error.message || 'No videos found');
 
@@ -32,10 +59,11 @@ async function loadPlaylist(playlistId) {
   } catch (err) {
     console.error('Failed to load playlist:', err);
     document.getElementById('playlistVideos').innerHTML =
-      '<p style="color:red;">Failed to load playlist. Check console for details.</p>';
+      '<p style="color:red;">Failed to load playlist.</p>';
   }
 }
 
+// Display videos in the playlist browser
 function renderPlaylistItems() {
   const container = document.getElementById('playlistVideos');
   container.innerHTML = '';
@@ -56,39 +84,40 @@ function renderPlaylistItems() {
   });
 }
 
+// Load video by index
 function loadVideo(index) {
   currentVideoIndex = index;
   const videoId = currentPlaylist[index].snippet.resourceId.videoId;
-document.getElementById('videoPlayer').src =
-  `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=0&controls=1&modestbranding=1&enablejsapi=1`;
-
+  player.loadVideoById(videoId);
 }
 
+// Video control buttons
 function previousVideo() {
-  if (currentVideoIndex > 0) loadVideo(--currentVideoIndex);
+  if (currentVideoIndex > 0) {
+    loadVideo(--currentVideoIndex);
+  }
 }
 
 function nextVideo() {
-  if (currentVideoIndex < currentPlaylist.length - 1) loadVideo(++currentVideoIndex);
+  if (currentVideoIndex < currentPlaylist.length - 1) {
+    loadVideo(++currentVideoIndex);
+  }
 }
 
 function togglePlayPause() {
-  const iframe = document.getElementById('videoPlayer');
-  iframe.contentWindow.postMessage(
-    JSON.stringify({
-      event: 'command',
-      func: 'playVideo',
-      args: []
-    }),
-    '*'
-  );
+  const state = player.getPlayerState();
+  if (state === YT.PlayerState.PLAYING) {
+    player.pauseVideo();
+  } else {
+    player.playVideo();
+  }
 }
 
-
+// Text sizing
 function adjustFontSize(step) {
   const el = document.getElementById('playlistPane');
   const current = parseFloat(getComputedStyle(el).fontSize);
   el.style.fontSize = `${current + step}px`;
 }
 
-window.onload = loadPlaylists;
+// Auto-init is handled by YouTube API's global callback
