@@ -1,7 +1,7 @@
 let player;
 let currentPlaylist = [];
 let currentVideoIndex = 0;
-const apiKey = 'YOUR_API_KEY'; // Replace with your real key
+const apiKey = 'AIzaSyAF0WI0zfh8wxf4Vzu4ucKPQBG8eTGrHbo'; // Replace with your real key
 
 function onYouTubeIframeAPIReady() {
   player = new YT.Player('videoPlayer', {
