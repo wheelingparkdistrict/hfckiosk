@@ -131,19 +131,23 @@ button:hover {
 }
 
 .playlist-video img {
-  width: 80px;
-  height: 45px;
+  width: 120px;
+  height: auto;
   border-radius: 3px;
 }
 
-.playback-controls {
+.video-info {
   display: flex;
-  justify-content: space-around;
-  padding-top: 10px;
-  margin-top: auto;
+  flex-direction: column;
+  gap: 4px;
 }
 
-.icon-label {
-  font-size: 12px;
-  margin-top: 3px;
+.video-title {
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.video-duration {
+  font-size: 0.75rem;
+  color: #ccc;
 }
