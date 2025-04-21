@@ -106,24 +106,29 @@ async function renderPlaylistItems() {
   const videoIds = currentPlaylist.map(item => item.snippet.resourceId.videoId);
   const durations = await fetchVideoDurations(videoIds);
 
-  currentPlaylist.forEach((item, index) => {
-    const videoId = item.snippet.resourceId.videoId;
-    const title = item.snippet.title;
-    const thumb = item.snippet.thumbnails.medium.url;
-    const duration = durations[videoId] || '';
+currentPlaylist.forEach((item, index) => {
+  const videoId = item.snippet.resourceId.videoId;
+  const title = item.snippet.title;
+  const thumb = item.snippet.thumbnails.medium.url;
+  const duration = durations[videoId] || '';
 
-    const div = document.createElement('div');
-    div.className = 'playlist-video';
-    div.innerHTML = `
-      <img src="${thumb}" alt="${title}" style="width: 120px;">
-      <div class="video-info">
-        <span class="video-title">${title}</span>
-        <span class="video-duration">${duration}</span>
-      </div>
-    `;
-    div.onclick = () => loadVideo(index);
-    container.appendChild(div);
-  });
+  const div = document.createElement('div');
+  div.className = 'playlist-video';
+  if (index === currentVideoIndex) {
+    div.classList.add('now-playing');
+  }
+
+  div.innerHTML = `
+    <img src="${thumb}" alt="${title}" style="width: 120px;">
+    <div class="video-info">
+      <span class="video-title">${title}</span>
+      <span class="video-duration">${duration}</span>
+    </div>
+  `;
+  div.onclick = () => loadVideo(index);
+  container.appendChild(div);
+});
+
 }
 
 
