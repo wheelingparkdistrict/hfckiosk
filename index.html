@@ -4,98 +4,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HFC Fitness Kiosk</title>
-  <style>
-    body, html {
-      margin: 0;
-      padding: 0;
-      background-color: #606261;
-      font-family: Arial, sans-serif;
-      color: #fff;
-      overflow: hidden;
-      height: 100vh;
-    }
-    header {
-      background-color: #0099A8;
-      padding: 10px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      height: 120px;
-    }
-    #logo {
-      height: 50px;
-    }
-    .header-top, .header-bottom {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    #playlistButtons {
-      display: flex;
-      gap: 10px;
-    }
-    #playlistButtons span {
-      font-variant: small-caps;
-      margin-right: 15px;
-    }
-    #playlistButtons button, #controls button, #playbackControls button {
-      background: #007B86;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      padding: 5px;
-      cursor: pointer;
-      font-size: 0.8rem;
-      width: 70px;
-      height: 50px;
-    }
-    #controls {
-      display: flex;
-      gap: 10px;
-    }
-    main {
-      display: flex;
-      height: calc(100% - 120px);
-    }
-    #playerPane {
-      flex-grow: 1;
-      background: #000;
-    }
-    #playlistPane {
-      width: 300px;
-      overflow-y: auto;
-      padding: 10px;
-      background-color: rgba(0,0,0,0.3);
-      position: relative;
-      font-size: 1rem;
-    }
-    #playbackControls {
-      position: absolute;
-      bottom: 10px;
-      left: 0;
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <header>
   <div class="header-top">
     <img id="logo" src="hfc_logo.svg" alt="HFC Logo">
-    <span>Select a Playlist</span>
+    <span class="playlist-label">Select a Playlist</span>
     <div id="controls">
       <button id="fontDown">A-<br><small>Reduce Text</small></button>
       <button id="fontUp">A+<br><small>Increase Text</small></button>
       <button id="reload">⟳<br><small>Reload</small></button>
     </div>
   </div>
-  <div class="header-bottom" id="playlistButtons">
-    <button onclick="loadPlaylist('PLRdkgOpCgKLCHW0LepxgvtZhCPAKpA_ph')">Barre</button>
-    <button onclick="loadPlaylist('PLRdkgOpCgKLAMNCxMO2C1_UqUJWOxhfFG')">Full Body</button>
-    <button onclick="loadPlaylist('PLRdkgOpCgKLDpQ0yMrjs_UG0YgYkR7vKl')">Cardio HIIT</button>
+  <div class="header-bottom">
+    <div id="playlistButtons">
+      <button data-playlist="PLRdkgOpCgKLCHW0LepxgvtZhCPAKpA_ph">Barre</button>
+      <button data-playlist="PLRdkgOpCgKLAMNCxMO2C1_UqUJWOxhfFG">Full Body</button>
+      <button data-playlist="PLRdkgOpCgKLDpQ0yMrjs_UG0YgYkR7vKl">Cardio HIIT</button>
+    </div>
   </div>
 </header>
 
@@ -104,6 +31,7 @@
     <iframe id="player" width="100%" height="100%" frameborder="0" allowfullscreen src="https://www.youtube-nocookie.com/embed/?autoplay=0"></iframe>
   </div>
   <div id="playlistPane">
+    <div id="videosList"></div>
     <div id="playbackControls">
       <button id="prev">⏮️<br><small>Previous</small></button>
       <button id="playpause">⏯️<br><small>Play/Pause</small></button>
@@ -112,32 +40,6 @@
   </div>
 </main>
 
-<script>
-  const fontSizes = ["0.8rem", "1rem", "1.2rem", "1.4rem"];
-  let currentFontSize = 1;
-
-  document.getElementById('fontUp').onclick = () => {
-    if (currentFontSize < fontSizes.length - 1) currentFontSize++;
-    document.getElementById('playlistPane').style.fontSize = fontSizes[currentFontSize];
-  };
-
-  document.getElementById('fontDown').onclick = () => {
-    if (currentFontSize > 0) currentFontSize--;
-    document.getElementById('playlistPane').style.fontSize = fontSizes[currentFontSize];
-  };
-
-  document.getElementById('reload').onclick = () => location.reload();
-
-  function loadPlaylist(playlistId) {
-    document.getElementById('player').src = `https://www.youtube-nocookie.com/embed/videoseries?list=${playlistId}&autoplay=0&controls=1&modestbranding=1`;
-  }
-
-  document.getElementById('playpause').onclick = () => document.getElementById('player').contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
-  document.getElementById('prev').onclick = () => document.getElementById('player').contentWindow.postMessage('{"event":"command","func":"previousVideo","args":""}', '*');
-  document.getElementById('next').onclick = () => document.getElementById('player').contentWindow.postMessage('{"event":"command","func":"nextVideo","args":""}', '*');
-
-  loadPlaylist('PLRdkgOpCgKLCHW0LepxgvtZhCPAKpA_ph');
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
