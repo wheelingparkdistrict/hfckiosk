@@ -1,115 +1,105 @@
-body, html {
-  margin: 0;
-  padding: 0;
-  font-family: "Montserrat", "Helvetica", "Arial", sans-serif;
-  background-color: #606261;
-  color: #fff;
-  overflow: hidden;
+// script.js - YouTube Kiosk Player
+
+let player;
+let currentPlaylist = [];
+let currentVideoIndex = 0;
+
+function onYouTubeIframeAPIReady() {
+  player = new YT.Player('player', {
+    height: '100%',
+    width: '100%',
+    videoId: '',
+    playerVars: { 'autoplay': 0, 'controls': 1, 'modestbranding': 1 },
+    events: {
+      'onReady': onPlayerReady,
+      'onStateChange': onPlayerStateChange
+    }
+  });
 }
 
-header {
-  background-color: #0099A8;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+function onPlayerReady(event) {
+  // Player is ready
 }
 
-.header-top {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+function onPlayerStateChange(event) {
+  // Handle state changes if needed
 }
 
-#logo {
-  height: 50px;
-  width: auto;
+function loadPlaylist(playlistId) {
+  fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=25&playlistId=${playlistId}&key=AIzaSyBXOnPb8MKxBE1pT6SYvdQdX_87350Nk9g`)
+    .then(response => response.json())
+    .then(data => {
+      currentPlaylist = data.items;
+      currentVideoIndex = 0;
+      loadVideoByIndex(currentVideoIndex);
+      renderPlaylistVideos();
+    });
 }
 
-#controls button, #playbackControls button {
-  background-color: #C10230;
-  border: none;
-  color: white;
-  padding: 10px;
-  cursor: pointer;
-  font-size: 16px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin: 0 5px;
-  border-radius: 5px;
+function loadVideoByIndex(index) {
+  const videoId = currentPlaylist[index].snippet.resourceId.videoId;
+  player.loadVideoById(videoId);
 }
 
-#controls button small, #playbackControls button small {
-  font-size: 12px;
+function renderPlaylistVideos() {
+  const playlistVideos = document.getElementById('playlistVideos');
+  playlistVideos.innerHTML = '';
+  currentPlaylist.forEach((item, index) => {
+    const video = document.createElement('div');
+    video.classList.add('playlist-video');
+    video.innerHTML = `
+      <img src="${item.snippet.thumbnails.default.url}" alt="${item.snippet.title}" />
+      <span>${item.snippet.title}</span>
+    `;
+    video.onclick = () => {
+      currentVideoIndex = index;
+      loadVideoByIndex(currentVideoIndex);
+    };
+    playlistVideos.appendChild(video);
+  });
 }
 
-.header-bottom {
-  margin-top: 5px;
-  display: flex;
-  gap: 10px;
-  justify-content: center;
+// Playback Controls
+document.getElementById('prev').onclick = () => {
+  if (currentVideoIndex > 0) {
+    currentVideoIndex--;
+    loadVideoByIndex(currentVideoIndex);
+  }
+};
+
+document.getElementById('next').onclick = () => {
+  if (currentVideoIndex < currentPlaylist.length - 1) {
+    currentVideoIndex++;
+    loadVideoByIndex(currentVideoIndex);
+  }
+};
+
+document.getElementById('playpause').onclick = () => {
+  const state = player.getPlayerState();
+  if (state === YT.PlayerState.PLAYING) {
+    player.pauseVideo();
+  } else {
+    player.playVideo();
+  }
+};
+
+// Text resizing
+let fontSizeLevel = 2;
+const fontSizes = ['14px', '16px', '18px', '20px', '22px'];
+
+function updateFontSize() {
+  document.getElementById('playlistPane').style.fontSize = fontSizes[fontSizeLevel];
 }
 
-.header-bottom button {
-  background-color: #789904;
-  border: none;
-  color: white;
-  padding: 10px;
-  cursor: pointer;
-  border-radius: 5px;
-}
+document.getElementById('fontUp').onclick = () => {
+  if (fontSizeLevel < fontSizes.length - 1) fontSizeLevel++;
+  updateFontSize();
+};
 
-main {
-  display: flex;
-  width: 100%;
-  height: calc(100vh - 100px);
-}
+document.getElementById('fontDown').onclick = () => {
+  if (fontSizeLevel > 0) fontSizeLevel--;
+  updateFontSize();
+};
 
-#playerPane {
-  flex: 3;
-  background-color: #000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-#player {
-  width: 100%;
-  height: 100%;
-}
-
-#playlistPane {
-  flex: 1;
-  background-color: #606261;
-  display: flex;
-  flex-direction: column;
-  padding: 10px;
-}
-
-#playlistVideos {
-  flex: 1;
-  overflow-y: auto;
-}
-
-#playlistVideos button {
-  width: 100%;
-  text-align: left;
-  padding: 5px;
-  background-color: #DB8F27;
-  border: none;
-  color: white;
-  margin-bottom: 5px;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-#playbackControls {
-  display: flex;
-  justify-content: space-around;
-  margin-top: 10px;
-}
+// Reload button
+document.getElementById('reload').onclick = () => location.reload();
