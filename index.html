@@ -8,21 +8,20 @@
   <script src="https://www.youtube.com/iframe_api"></script>
 </head>
 <body>
-  <header id="header">
-    <div id="logo">
-      <img src="hfc_logo.svg" alt="HFC Logo">
-    </div>
-    <div id="controls">
-      <button onclick="adjustFontSize(-1)">A-<br><small>Reduce Text</small></button>
-      <button onclick="adjustFontSize(1)">A+<br><small>Increase Text</small></button>
-      <button onclick="location.reload()">&#x21bb;<br><small>Reload</small></button>
-    </div>
-    <div id="playlistControls">
-      <button onclick="loadPlaylist('PLRdkgOpCgKLCHW0LepxgvtZhCPAKpA_ph')">Barre</button>
-      <button onclick="loadPlaylist('PLRdkgOpCgKLAMNCxMO2C1_UqUJWOxhfFG')">Full Body</button>
-      <button onclick="loadPlaylist('PLRdkgOpCgKLDpQ0yMrjs_UG0YgYkR7vKl')">Cardio HIIT</button>
-    </div>
-  </header>
+<div id="header">
+  <div id="logo"><img src="hfc_logo.svg" alt="HFC Logo"></div>
+  <div id="controls">
+    <button onclick="adjustFontSize(-1)"><span>A-</span> Reduce Text</button>
+    <button onclick="adjustFontSize(1)"><span>A+</span> Increase Text</button>
+    <button onclick="reloadPage()"><span>⟳</span> Reload</button>
+  </div>
+  <div id="playlistControls">
+    <button onclick="changePlaylist(0)">Barre</button>
+    <button onclick="changePlaylist(1)">Full Body</button>
+    <button onclick="changePlaylist(2)">Cardio HIIT</button>
+  </div>
+</div>
+
 
   <main id="mainContent">
     <div id="playerPane">
