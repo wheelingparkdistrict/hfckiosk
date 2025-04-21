@@ -1,6 +1,7 @@
 let player;
 let currentPlaylist = [];
 let currentVideoIndex = 0;
+let isPlayerReady = false;
 const apiKey = 'AIzaSyAF0WI0zfh8wxf4Vzu4ucKPQBG8eTGrHbo'; // Replace with your real key
 
 function onYouTubeIframeAPIReady() {
@@ -12,9 +13,12 @@ function onYouTubeIframeAPIReady() {
       rel: 0,
       controls: 1,
       autoplay: 0,
+      enablejsapi: 1,
     },
     events: {
-      onReady: loadPlaylists
+      onReady: () => {
+        isPlayerReady = true;
+        loadPlaylists();
     }
   });
 }
@@ -79,8 +83,15 @@ function renderPlaylistItems() {
 function loadVideo(index) {
   currentVideoIndex = index;
   const videoId = currentPlaylist[index].snippet.resourceId.videoId;
-  player.loadVideoById(videoId);
+
+  if (isPlayerReady && player && player.loadVideoById) {
+    player.loadVideoById(videoId);
+  } else {
+    console.warn("Player not ready, retrying in 200ms...");
+    setTimeout(() => loadVideo(index), 200);
+  }
 }
+
 
 function previousVideo() {
   if (currentVideoIndex > 0) {
@@ -113,5 +124,6 @@ function adjustFontSize(step) {
   pane.style.fontSize = `${size + step}px`;
 }
 function fullReload() {
-  window.location.reload();
+  // This is the most browser-compatible hard reload equivalent
+  window.location.href = window.location.href.split('#')[0];
 }
