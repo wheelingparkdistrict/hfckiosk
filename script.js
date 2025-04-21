@@ -114,5 +114,4 @@ function adjustFontSize(step) {
   const size = parseFloat(window.getComputedStyle(pane).fontSize);
   const newSize = Math.min(Math.max(size + step, 12), 24); // Clamp between 12px and 24px
   pane.style.fontSize = `${newSize}px`;
-}px`;
 }
