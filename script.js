@@ -29,18 +29,57 @@ function onYouTubeIframeAPIReady() {
   });
 }
 
-function loadPlaylist() {
-  fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${currentPlaylist.id}&maxResults=50&key=AIzaSyBXOnPb8MKxBE1pT6SYvdQdX_87350Nk9g`)
-    .then(response => response.json())
-    .then(data => {
-      renderPlaylistItems(data.items);
-      if (data.items.length > 0) {
-        currentVideoIndex = 0;
-        player.cueVideoById(data.items[0].snippet.resourceId.videoId);
-      }
-    })
-    .catch(error => console.error("Playlist load error:", error));
+async function loadPlaylist(playlistId) {
+  try {
+    const response = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${playlistId}&maxResults=50&key=${apiKey}`);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    renderPlaylistItems(data.items || []);
+  } catch (error) {
+    console.error("Playlist load error:", error);
+    // Optional: display a user-friendly message
+  }
 }
+
+function renderPlaylistItems(items) {
+  const playlistPane = document.getElementById('playlistPane');
+  playlistPane.innerHTML = '';  // Clear existing items
+
+  if (!items.length) {
+    playlistPane.innerHTML = '<p>No videos found.</p>';
+    return;
+  }
+
+  items.forEach(item => {
+    const videoId = item.snippet.resourceId.videoId;
+    const title = item.snippet.title;
+    const thumbnailUrl = item.snippet.thumbnails.default.url;
+
+    const div = document.createElement('div');
+    div.className = 'playlist-video';
+    div.innerHTML = `
+      <img src="${thumbnailUrl}" alt="${title}">
+      <span>${title}</span>
+    `;
+    div.onclick = () => loadVideo(videoId);
+    playlistPane.appendChild(div);
+  });
+
+  // Ensure playback controls stay anchored
+  const controls = document.createElement('div');
+  controls.className = 'playback-controls';
+  controls.innerHTML = `
+    <button onclick="previousVideo()">⏮ Previous</button>
+    <button onclick="togglePlayPause()">⏯ Play/Pause</button>
+    <button onclick="nextVideo()">⏭ Next</button>
+  `;
+  playlistPane.appendChild(controls);
+}
+
 
 function renderPlaylistItems(items) {
   const playlistPane = document.getElementById('playlistPane');
