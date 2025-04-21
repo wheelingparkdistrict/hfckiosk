@@ -18,36 +18,45 @@
       background-color: #0099A8;
       padding: 10px;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: space-between;
-      height: 60px;
+      height: 120px;
     }
     #logo {
-      height: 100%;
+      height: 50px;
+    }
+    .header-top, .header-bottom {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    #playlistButtons {
+      display: flex;
+      gap: 10px;
+    }
+    #playlistButtons span {
+      font-variant: small-caps;
+      margin-right: 15px;
     }
     #playlistButtons button, #controls button, #playbackControls button {
-      background: #0099A8;
+      background: #007B86;
       color: #fff;
       border: none;
       border-radius: 5px;
       padding: 5px;
-      margin-left: 5px;
       cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
       font-size: 0.8rem;
       width: 70px;
-      height: 70px;
+      height: 50px;
     }
-    #playlistButtons span {
-      font-variant: small-caps;
-      margin-right: 10px;
+    #controls {
+      display: flex;
+      gap: 10px;
     }
     main {
       display: flex;
-      height: calc(100% - 60px);
+      height: calc(100% - 120px);
     }
     #playerPane {
       flex-grow: 1;
@@ -61,20 +70,9 @@
       position: relative;
       font-size: 1rem;
     }
-    .videoItem {
-      display: flex;
-      align-items: center;
-      cursor: pointer;
-      margin-bottom: 10px;
-    }
-    .videoItem img {
-      width: 100px;
-      height: 56px;
-      margin-right: 10px;
-    }
     #playbackControls {
       position: absolute;
-      bottom: 20px;
+      bottom: 10px;
       left: 0;
       width: 100%;
       display: flex;
@@ -85,17 +83,19 @@
 </head>
 <body>
 <header>
-  <img id="logo" src="hfc_logo.svg" alt="HFC Logo">
-  <div id="playlistButtons">
+  <div class="header-top">
+    <img id="logo" src="hfc_logo.svg" alt="HFC Logo">
     <span>Select a Playlist</span>
+    <div id="controls">
+      <button id="fontDown">A-<br><small>Reduce Text</small></button>
+      <button id="fontUp">A+<br><small>Increase Text</small></button>
+      <button id="reload">⟳<br><small>Reload</small></button>
+    </div>
+  </div>
+  <div class="header-bottom" id="playlistButtons">
     <button onclick="loadPlaylist('PLRdkgOpCgKLCHW0LepxgvtZhCPAKpA_ph')">Barre</button>
     <button onclick="loadPlaylist('PLRdkgOpCgKLAMNCxMO2C1_UqUJWOxhfFG')">Full Body</button>
     <button onclick="loadPlaylist('PLRdkgOpCgKLDpQ0yMrjs_UG0YgYkR7vKl')">Cardio HIIT</button>
-  </div>
-  <div id="controls">
-    <button id="fontDown">A-<span>Reduce Text</span></button>
-    <button id="fontUp">A+<span>Increase Text</span></button>
-    <button id="reload">⟳<span>Reload Page</span></button>
   </div>
 </header>
 
@@ -105,9 +105,9 @@
   </div>
   <div id="playlistPane">
     <div id="playbackControls">
-      <button id="prev">⏮️<span>Previous</span></button>
-      <button id="playpause">⏯️<span>Play/Pause</span></button>
-      <button id="next">⏭️<span>Next</span></button>
+      <button id="prev">⏮️<br><small>Previous</small></button>
+      <button id="playpause">⏯️<br><small>Play/Pause</small></button>
+      <button id="next">⏭️<br><small>Next</small></button>
     </div>
   </div>
 </main>
