@@ -1,5 +1,3 @@
-/* style.css - HFC Kiosk Styles */
-
 body {
   font-family: 'Montserrat', 'Helvetica', 'Arial', sans-serif;
   margin: 0;
@@ -11,7 +9,6 @@ body {
 
 #header {
   background-color: #0099A8;
-  color: #FFFFFF;
   padding: 10px;
   display: flex;
   align-items: center;
@@ -23,7 +20,8 @@ body {
   width: auto;
 }
 
-#controls, #playlistControls {
+#controls,
+#playlistControls {
   display: flex;
   gap: 10px;
 }
@@ -64,6 +62,11 @@ button:hover {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+
+#playlistVideos {
+  flex-grow: 1;
+  overflow-y: auto;
 }
 
 .playlist-video {
