@@ -1,47 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang=\"en\">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset=\"UTF-8\">
+  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
   <title>HFC Fitness Kiosk</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://www.youtube.com/iframe_api"></script>
+  <link rel=\"stylesheet\" href=\"style.css\">
 </head>
 <body>
 <header>
-  <div class="header-top">
-    <img id="logo" src="hfc_logo.svg" alt="HFC Logo">
-    <span class="playlist-label">Select a Playlist</span>
-    <div id="controls">
-      <button id="fontDown">A-<br><small>Reduce Text</small></button>
-      <button id="fontUp">A+<br><small>Increase Text</small></button>
-      <button id="reload">⟳<br><small>Reload</small></button>
+  <div class=\"header-top\">
+    <img id=\"logo\" src=\"hfc_logo.svg\" alt=\"HFC Logo\">
+    <span>Select a Playlist</span>
+    <div id=\"controls\">
+      <button id=\"fontDown\">A-<br><small>Reduce Text</small></button>
+      <button id=\"fontUp\">A+<br><small>Increase Text</small></button>
+      <button id=\"reload\">⟳<br><small>Reload</small></button>
     </div>
   </div>
-  <div class="header-bottom">
-    <div id="playlistButtons">
-      <button data-playlist="PLRdkgOpCgKLCHW0LepxgvtZhCPAKpA_ph">Barre</button>
-      <button data-playlist="PLRdkgOpCgKLAMNCxMO2C1_UqUJWOxhfFG">Full Body</button>
-      <button data-playlist="PLRdkgOpCgKLDpQ0yMrjs_UG0YgYkR7vKl">Cardio HIIT</button>
-    </div>
+  <div class=\"header-bottom\" id=\"playlistButtons\">
+    <button onclick=\"loadPlaylist('PLRdkgOpCgKLCHW0LepxgvtZhCPAKpA_ph')\">Barre</button>
+    <button onclick=\"loadPlaylist('PLRdkgOpCgKLAMNCxMO2C1_UqUJWOxhfFG')\">Full Body</button>
+    <button onclick=\"loadPlaylist('PLRdkgOpCgKLDpQ0yMrjs_UG0YgYkR7vKl')\">Cardio HIIT</button>
   </div>
 </header>
 
 <main>
-  <div id="playerPane">
-   <iframe id="player" width="100%" height="100%" frameborder="0" allowfullscreen
- src="https://www.youtube-nocookie.com/embed/videoseries?list=PLRdkgOpCgKLCHW0LepxgvtZhCPAKpA_ph&enablejsapi=1&autoplay=0&controls=1&modestbranding=1"></iframe>
+  <div id=\"playerPane\">
+    <div id=\"player\"></div>
   </div>
-  <div id="playlistPane">
-    <div id="videosList"></div>
-    <div id="playbackControls">
-      <button id="prev">⏮️<br><small>Previous</small></button>
-      <button id="playpause">⏯️<br><small>Play/Pause</small></button>
-      <button id="next">⏭️<br><small>Next</small></button>
+  <div id=\"playlistPane\">
+    <div id=\"playlistVideos\"></div>
+    <div id=\"playbackControls\">
+      <button id=\"prev\">⏮️<br><small>Previous</small></button>
+      <button id=\"playpause\">⏯️<br><small>Play/Pause</small></button>
+      <button id=\"next\">⏭️<br><small>Next</small></button>
     </div>
   </div>
 </main>
 
-<script src="script.js"></script>
+<script src=\"https://www.youtube.com/iframe_api\"></script>
+<script src=\"script.js\"></script>
 </body>
 </html>
