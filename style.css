@@ -1,76 +1,115 @@
 body, html {
   margin: 0;
   padding: 0;
-  background-color: #606261;
   font-family: "Montserrat", "Helvetica", "Arial", sans-serif;
+  background-color: #606261;
   color: #fff;
   overflow: hidden;
-  height: 100vh;
 }
+
 header {
   background-color: #0099A8;
   padding: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 120px;
+  justify-content: center;
 }
+
+.header-top {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 #logo {
   height: 50px;
-  max-width: 100%;
-  object-fit: contain;
+  width: auto;
 }
-.header-top, .header-bottom {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-#playlistButtons {
-  display: flex;
-  gap: 10px;
-}
-#playlistButtons span {
-  font-variant: small-caps;
-  margin-right: 15px;
-}
-#playlistButtons button, #controls button, #playbackControls button {
-  background: #007B86;
-  color: #fff;
+
+#controls button, #playbackControls button {
+  background-color: #C10230;
   border: none;
-  border-radius: 5px;
-  padding: 5px;
+  color: white;
+  padding: 10px;
   cursor: pointer;
-  font-size: 0.8rem;
-  width: 70px;
-  height: 50px;
+  font-size: 16px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 5px;
+  border-radius: 5px;
 }
-#controls {
+
+#controls button small, #playbackControls button small {
+  font-size: 12px;
+}
+
+.header-bottom {
+  margin-top: 5px;
   display: flex;
   gap: 10px;
+  justify-content: center;
 }
+
+.header-bottom button {
+  background-color: #789904;
+  border: none;
+  color: white;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
 main {
   display: flex;
-  height: calc(100% - 120px);
-}
-#playerPane {
-  flex-grow: 1;
-  background: #000;
-}
-#playlistPane {
-  width: 300px;
-  overflow-y: auto;
-  padding: 10px;
-  background-color: rgba(0,0,0,0.3);
-  position: relative;
-  font-size: 1rem;
-}
-#playbackControls {
-  position: absolute;
-  bottom: 10px;
-  left: 0;
   width: 100%;
+  height: calc(100vh - 100px);
+}
+
+#playerPane {
+  flex: 3;
+  background-color: #000;
   display: flex;
+  align-items: center;
   justify-content: center;
-  gap: 10px;
+}
+
+#player {
+  width: 100%;
+  height: 100%;
+}
+
+#playlistPane {
+  flex: 1;
+  background-color: #606261;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+#playlistVideos {
+  flex: 1;
+  overflow-y: auto;
+}
+
+#playlistVideos button {
+  width: 100%;
+  text-align: left;
+  padding: 5px;
+  background-color: #DB8F27;
+  border: none;
+  color: white;
+  margin-bottom: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+#playbackControls {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 10px;
 }
