@@ -28,28 +28,8 @@ async function loadPlaylists() {
   const response = await fetch('data.json');
   const playlists = await response.json();
   const container = document.getElementById('playlistButtons');
-async function fetchVideoDurations(videoIds) {
-  const ids = videoIds.join(',');
-  const response = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${ids}&key=${apiKey}`);
-  const data = await response.json();
-  const durations = {};
-  data.items.forEach(video => {
-    durations[video.id] = formatDuration(video.contentDetails.duration);
-  });
-  return durations;
-}
 
-function formatDuration(iso) {
-  const match = iso.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
-  const h = (parseInt(match[1]) || 0);
-  const m = (parseInt(match[2]) || 0);
-  const s = (parseInt(match[3]) || 0);
-
-  const totalSec = h * 3600 + m * 60 + s;
-  const mins = Math.floor(totalSec / 60);
-  const secs = totalSec % 60;
-  return `${mins}:${secs.toString().padStart(2, '0')}`;
-}
+  container.innerHTML = ''; // Prevent duplicates on refresh
 
   playlists.forEach(pl => {
     const btn = document.createElement('button');
@@ -59,6 +39,24 @@ function formatDuration(iso) {
     if (pl.default) loadPlaylist(pl.id);
   });
 }
+
+async function loadPlaylist(playlistId) {
+  try {
+    const response = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${playlistId}&maxResults=50&key=${apiKey}`);
+    const data = await response.json();
+
+    if (!data.items) throw new Error(data.error?.message || 'No videos returned');
+
+    currentPlaylist = data.items;
+    currentVideoIndex = 0;
+    renderPlaylistItems();
+    cueVideo(currentVideoIndex);
+  } catch (error) {
+    console.error('Failed to load playlist:', error);
+    document.getElementById('playlistVideos').innerHTML = '<p style="color:red;">Playlist failed to load.</p>';
+  }
+}
+
 async function fetchVideoDurations(videoIds) {
   const ids = videoIds.join(',');
   const response = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${ids}&key=${apiKey}`);
@@ -82,23 +80,6 @@ function formatDuration(iso) {
   return `${mins}:${secs.toString().padStart(2, '0')}`;
 }
 
-async function loadPlaylist(playlistId) {
-  try {
-    const response = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${playlistId}&maxResults=50&key=${apiKey}`);
-    const data = await response.json();
-
-    if (!data.items) throw new Error(data.error?.message || 'No videos returned');
-
-    currentPlaylist = data.items;
-    currentVideoIndex = 0;
-    renderPlaylistItems();
-    cueVideo(currentVideoIndex);
-  } catch (error) {
-    console.error('Failed to load playlist:', error);
-    document.getElementById('playlistVideos').innerHTML = '<p style="color:red;">Playlist failed to load.</p>';
-  }
-}
-
 async function renderPlaylistItems() {
   const container = document.getElementById('playlistVideos');
   container.innerHTML = '';
@@ -106,31 +87,28 @@ async function renderPlaylistItems() {
   const videoIds = currentPlaylist.map(item => item.snippet.resourceId.videoId);
   const durations = await fetchVideoDurations(videoIds);
 
-currentPlaylist.forEach((item, index) => {
-  const videoId = item.snippet.resourceId.videoId;
-  const title = item.snippet.title;
-  const thumb = item.snippet.thumbnails.medium.url;
-  const duration = durations[videoId] || '';
+  currentPlaylist.forEach((item, index) => {
+    const videoId = item.snippet.resourceId.videoId;
+    const title = item.snippet.title;
+    const thumb = item.snippet.thumbnails.medium.url;
+    const duration = durations[videoId] || '';
 
-  const div = document.createElement('div');
-  div.className = 'playlist-video';
-  if (index === currentVideoIndex) {
-    div.classList.add('now-playing');
-  }
+    const div = document.createElement('div');
+    div.className = 'playlist-video';
+    if (index === currentVideoIndex) {
+      div.classList.add('now-playing');
+    }
 
-  div.innerHTML = `
-    <img src="${thumb}" alt="${title}" style="width: 120px;">
-    <div class="video-info">
-      <span class="video-title">${title}</span>
-      <span class="video-duration">${duration}</span>
-    </div>
-  `;
-  div.onclick = () => loadVideo(index);
-  container.appendChild(div);
-});
-
+    div.innerHTML = `
+      <img src="${thumb}" alt="${title}" style="width: 120px;">
+      <div class="video-info">
+        <span class="video-title">${title} (${duration})</span>
+      </div>
+    `;
+    div.onclick = () => loadVideo(index);
+    container.appendChild(div);
+  });
 }
-
 
 function loadVideo(index) {
   currentVideoIndex = index;
@@ -143,7 +121,6 @@ function loadVideo(index) {
   }
 }
 
-
 function cueVideo(index) {
   currentVideoIndex = index;
   const videoId = currentPlaylist[index].snippet.resourceId.videoId;
@@ -154,7 +131,6 @@ function cueVideo(index) {
     setTimeout(() => cueVideo(index), 200);
   }
 }
-
 
 function previousVideo() {
   if (currentVideoIndex > 0) {
@@ -184,7 +160,6 @@ function togglePlayPause() {
   }
 }
 
-
 function adjustFontSize(step) {
   const pane = document.getElementById('playlistPane');
   const size = parseFloat(window.getComputedStyle(pane).fontSize);
@@ -193,12 +168,8 @@ function adjustFontSize(step) {
 }
 
 function resetKiosk() {
-  // Clear existing UI
   document.getElementById('playlistButtons').innerHTML = '';
   document.getElementById('playlistVideos').innerHTML = '';
   document.getElementById('playlistPane').style.fontSize = '16px';
-
-  // Reload playlists
   loadPlaylists();
 }
-
