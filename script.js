@@ -3,7 +3,7 @@ let currentPlaylist = [];
 let currentVideoIndex = 0;
 let isPlayerReady = false;
 
-const apiKey = 'YOUR_API_KEY'; // Replace with your actual restricted key
+const apiKey = 'AIzaSyAF0WI0zfh8wxf4Vzu4ucKPQBG8eTGrHbo'; // Replace with your actual restricted key
 
 function onYouTubeIframeAPIReady() {
   player = new YT.Player('videoPlayer', {
