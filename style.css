@@ -35,20 +35,7 @@ body {
   flex-direction: column;
   align-items: center;
   text-align: center;
-}
-
-#playlistControls::before {
-  content: "SELECT A PLAYLIST:";
-  text-transform: uppercase;
-  font-size: 14px;
-  margin-bottom: 5px;
-  color: #FFFFFF;
-}
-#playlistControls {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
+  flex-grow: 1;
 }
 
 #playlistControls::before {
@@ -57,16 +44,16 @@ body {
   font-size: 14px;
   margin-bottom: 5px;
   color: #FFFFFF;
+  display: block;
 }
 
-#playlistControls .playlist-button-row {
+#playlistButtons {
   display: flex;
-  flex-direction: row;
   gap: 10px;
   justify-content: center;
 }
 
-#playlistControls button {
+#playlistButtons button {
   background-color: #DB8F27;
   color: #FFFFFF;
   border: none;
@@ -80,11 +67,9 @@ body {
   min-width: 120px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
-  margin: 0 5px;
-  display: inline-block;
 }
 
-#playlistControls button:hover {
+#playlistButtons button:hover {
   background-color: #C17314;
 }
 
