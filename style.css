@@ -15,6 +15,11 @@ header {
   padding: 10px;
   height: 120px;
 }
+#logo {
+  height: 50px;
+  max-width: 100%; /* prevent horizontal overflow */
+  object-fit: contain; /* maintain aspect ratio */
+}
 
 .header-top, .header-bottom {
   display: flex;
