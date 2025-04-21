@@ -3,7 +3,7 @@ let currentPlaylist = [];
 let currentVideoIndex = 0;
 let isPlayerReady = false;
 
-const apiKey = 'AIzaSyAF0WI0zfh8wxf4Vzu4ucKPQBG8eTGrHbo'; // Replace with your actual YouTube API key
+const apiKey = 'YOUR_API_KEY'; // Replace with your actual YouTube API key
 
 function onYouTubeIframeAPIReady() {
   player = new YT.Player('videoPlayer', {
@@ -48,7 +48,7 @@ async function loadPlaylist(playlistId) {
     currentPlaylist = data.items;
     currentVideoIndex = 0;
     renderPlaylistItems();
-    loadVideo(currentVideoIndex);
+    cueVideo(currentVideoIndex);
   } catch (error) {
     console.error('Failed to load playlist:', error);
     document.getElementById('playlistVideos').innerHTML = '<p style="color:red;">Playlist failed to load.</p>';
@@ -83,6 +83,9 @@ function loadVideo(index) {
   } else {
     setTimeout(() => loadVideo(index), 200);
   }
+} else {
+    setTimeout(() => loadVideo(index), 200);
+  }
 }
 
 function previousVideo() {
@@ -97,6 +100,7 @@ function nextVideo() {
     currentVideoIndex++;
     loadVideo(currentVideoIndex);
   }
+}
 }
 
 function togglePlayPause() {
@@ -114,4 +118,14 @@ function adjustFontSize(step) {
   const size = parseFloat(window.getComputedStyle(pane).fontSize);
   const newSize = Math.min(Math.max(size + step, 12), 24); // Clamp between 12px and 24px
   pane.style.fontSize = `${newSize}px`;
+}px`;
+}
+function cueVideo(index) {
+  currentVideoIndex = index;
+  const videoId = currentPlaylist[index].snippet.resourceId.videoId;
+  if (isPlayerReady && player && player.cueVideoById) {
+    player.cueVideoById(videoId);
+  } else {
+    setTimeout(() => cueVideo(index), 200);
+  }
 }
