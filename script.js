@@ -125,7 +125,6 @@ function adjustFontSize(step) {
   const newSize = Math.min(Math.max(size + step, 12), 24);
   pane.style.fontSize = `${newSize}px`;
 }
-}
 
 function resetKiosk() {
   // Clear existing UI
