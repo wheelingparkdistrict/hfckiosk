@@ -1,45 +1,57 @@
-const apiKey = 'AIzaSyAF0WI0zfh8wxf4Vzu4ucKPQBG8eTGrHbo';
+const apiKey = 'YOUR_API_KEY'; // Replace with your restricted API key
 let currentPlaylist = [];
 let currentVideoIndex = 0;
 
 async function loadPlaylists() {
   const response = await fetch('data.json');
   const playlists = await response.json();
+  const container = document.getElementById('playlistControls');
 
-  playlists.forEach(playlist => {
+  playlists.forEach((pl, index) => {
     const btn = document.createElement('button');
-    btn.textContent = playlist.name;
-    btn.onclick = () => loadPlaylist(playlist.id);
-    document.getElementById('playlistControls').appendChild(btn);
-
-    if (playlist.default) loadPlaylist(playlist.id);
+    btn.textContent = pl.name;
+    btn.onclick = () => loadPlaylist(pl.id);
+    container.appendChild(btn);
+    if (pl.default) loadPlaylist(pl.id);
   });
 }
 
-async function loadPlaylist(id) {
-  const res = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${id}&maxResults=50&key=${apiKey}`);
-  if (!res.ok) {
-    alert('Failed to load playlist');
-    return;
+async function loadPlaylist(playlistId) {
+  try {
+    const response = await fetch(
+      `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${playlistId}&key=${apiKey}`
+    );
+    const data = await response.json();
+
+    if (!data.items) throw new Error(data.error.message || 'No videos found');
+
+    currentPlaylist = data.items;
+    currentVideoIndex = 0;
+    renderPlaylistItems();
+    loadVideo(currentVideoIndex);
+  } catch (err) {
+    console.error('Failed to load playlist:', err);
+    document.getElementById('playlistVideos').innerHTML =
+      '<p style="color:red;">Failed to load playlist. Check console for details.</p>';
   }
-  const data = await res.json();
-  currentPlaylist = data.items;
-  currentVideoIndex = 0;
-  renderPlaylistItems();
-  loadVideo(currentVideoIndex);
 }
 
 function renderPlaylistItems() {
   const container = document.getElementById('playlistVideos');
   container.innerHTML = '';
-  currentPlaylist.forEach((item, idx) => {
+
+  currentPlaylist.forEach((item, index) => {
+    const videoId = item.snippet.resourceId.videoId;
+    const title = item.snippet.title;
+    const thumb = item.snippet.thumbnails.default.url;
+
     const div = document.createElement('div');
     div.className = 'playlist-video';
-    div.onclick = () => loadVideo(idx);
     div.innerHTML = `
-      <img src="${item.snippet.thumbnails.default.url}">
-      <span>${item.snippet.title}</span>
+      <img src="${thumb}" alt="${title}" />
+      <span>${title}</span>
     `;
+    div.onclick = () => loadVideo(index);
     container.appendChild(div);
   });
 }
@@ -47,7 +59,8 @@ function renderPlaylistItems() {
 function loadVideo(index) {
   currentVideoIndex = index;
   const videoId = currentPlaylist[index].snippet.resourceId.videoId;
-  document.getElementById('videoPlayer').src = `https://www.youtube-nocookie.com/embed/${videoId}?controls=1&autoplay=0`;
+  document.getElementById('videoPlayer').src =
+    `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=0&controls=1&modestbranding=1`;
 }
 
 function previousVideo() {
@@ -64,9 +77,9 @@ function togglePlayPause() {
 }
 
 function adjustFontSize(step) {
-  const playlistPane = document.getElementById('playlistPane');
-  const currentSize = parseFloat(window.getComputedStyle(playlistPane).fontSize);
-  playlistPane.style.fontSize = `${currentSize + step}px`;
+  const el = document.getElementById('playlistPane');
+  const current = parseFloat(getComputedStyle(el).fontSize);
+  el.style.fontSize = `${current + step}px`;
 }
 
 window.onload = loadPlaylists;
