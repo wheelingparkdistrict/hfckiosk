@@ -124,6 +124,5 @@ function adjustFontSize(step) {
   pane.style.fontSize = `${size + step}px`;
 }
 function fullReload() {
-  // This is the most browser-compatible hard reload equivalent
-  window.location.href = window.location.href.split('#')[0];
+  window.location.reload(true); // still works in most browsers, cache-busting style
 }
