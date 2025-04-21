@@ -1,4 +1,4 @@
-const apiKey = 'YOUR_API_KEY'; // Replace with your restricted API key
+const apiKey = 'AIzaSyAF0WI0zfh8wxf4Vzu4ucKPQBG8eTGrHbo'; // Replace with your restricted API key
 let currentPlaylist = [];
 let currentVideoIndex = 0;
 
