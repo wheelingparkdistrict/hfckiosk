@@ -7,38 +7,34 @@ body, html {
   overflow: hidden;
   height: 100vh;
 }
-
 header {
   background-color: #0099A8;
+  padding: 10px;
   display: flex;
   flex-direction: column;
-  padding: 10px;
+  align-items: center;
   height: 120px;
 }
 #logo {
   height: 50px;
-  max-width: 100%; /* prevent horizontal overflow */
-  object-fit: contain; /* maintain aspect ratio */
+  max-width: 100%;
+  object-fit: contain;
 }
-
 .header-top, .header-bottom {
+  width: 100%;
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
 }
-
-.playlist-label {
-  font-variant: small-caps;
-}
-
 #playlistButtons {
   display: flex;
   gap: 10px;
-  justify-content: center;
-  width: 100%;
 }
-
-#controls button, #playlistButtons button, #playbackControls button {
+#playlistButtons span {
+  font-variant: small-caps;
+  margin-right: 15px;
+}
+#playlistButtons button, #controls button, #playbackControls button {
   background: #007B86;
   color: #fff;
   border: none;
@@ -49,38 +45,26 @@ header {
   width: 70px;
   height: 50px;
 }
-
+#controls {
+  display: flex;
+  gap: 10px;
+}
 main {
   display: flex;
   height: calc(100% - 120px);
 }
-
 #playerPane {
   flex-grow: 1;
   background: #000;
 }
-
 #playlistPane {
   width: 300px;
+  overflow-y: auto;
   padding: 10px;
   background-color: rgba(0,0,0,0.3);
   position: relative;
-  overflow-y: auto;
+  font-size: 1rem;
 }
-
-#videosList .videoItem {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-  cursor: pointer;
-}
-
-#videosList .videoItem img {
-  width: 100px;
-  height: 56px;
-  margin-right: 10px;
-}
-
 #playbackControls {
   position: absolute;
   bottom: 10px;
