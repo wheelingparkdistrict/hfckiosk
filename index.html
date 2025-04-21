@@ -1,44 +1,43 @@
 <!DOCTYPE html>
-<html lang=\"en\">
+<html lang="en">
 <head>
-  <meta charset=\"UTF-8\">
-  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
-  <title>HFC Fitness Kiosk</title>
-  <link rel=\"stylesheet\" href=\"style.css\">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HFC Kiosk</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://www.youtube.com/iframe_api"></script>
 </head>
 <body>
-<header>
-  <div class=\"header-top\">
-    <img id=\"logo\" src=\"hfc_logo.svg\" alt=\"HFC Logo\">
-    <span>Select a Playlist</span>
-    <div id=\"controls\">
-      <button id=\"fontDown\">A-<br><small>Reduce Text</small></button>
-      <button id=\"fontUp\">A+<br><small>Increase Text</small></button>
-      <button id=\"reload\">⟳<br><small>Reload</small></button>
+  <header id="header">
+    <div id="logo">
+      <img src="hfc_logo.svg" alt="HFC Logo">
     </div>
-  </div>
-  <div class=\"header-bottom\" id=\"playlistButtons\">
-    <button onclick=\"loadPlaylist('PLRdkgOpCgKLCHW0LepxgvtZhCPAKpA_ph')\">Barre</button>
-    <button onclick=\"loadPlaylist('PLRdkgOpCgKLAMNCxMO2C1_UqUJWOxhfFG')\">Full Body</button>
-    <button onclick=\"loadPlaylist('PLRdkgOpCgKLDpQ0yMrjs_UG0YgYkR7vKl')\">Cardio HIIT</button>
-  </div>
-</header>
-
-<main>
-  <div id=\"playerPane\">
-    <div id=\"player\"></div>
-  </div>
-  <div id=\"playlistPane\">
-    <div id=\"playlistVideos\"></div>
-    <div id=\"playbackControls\">
-      <button id=\"prev\">⏮️<br><small>Previous</small></button>
-      <button id=\"playpause\">⏯️<br><small>Play/Pause</small></button>
-      <button id=\"next\">⏭️<br><small>Next</small></button>
+    <div id="controls">
+      <button onclick="adjustFontSize(-1)">A-<br><small>Reduce Text</small></button>
+      <button onclick="adjustFontSize(1)">A+<br><small>Increase Text</small></button>
+      <button onclick="location.reload()">&#x21bb;<br><small>Reload</small></button>
     </div>
-  </div>
-</main>
+    <div id="playlistControls">
+      <button onclick="loadPlaylist('PLRdkgOpCgKLCHW0LepxgvtZhCPAKpA_ph')">Barre</button>
+      <button onclick="loadPlaylist('PLRdkgOpCgKLAMNCxMO2C1_UqUJWOxhfFG')">Full Body</button>
+      <button onclick="loadPlaylist('PLRdkgOpCgKLDpQ0yMrjs_UG0YgYkR7vKl')">Cardio HIIT</button>
+    </div>
+  </header>
 
-<script src=\"https://www.youtube.com/iframe_api\"></script>
-<script src=\"script.js\"></script>
+  <main id="mainContent">
+    <div id="playerPane">
+      <div id="player"></div>
+    </div>
+    <div id="playlistPane">
+      <div id="playlistBrowser"></div>
+      <div class="playback-controls">
+        <button onclick="previousVideo()">⏮<br><small>Previous</small></button>
+        <button onclick="togglePlayPause()">⏯<br><small>Play/Pause</small></button>
+        <button onclick="nextVideo()">⏭<br><small>Next</small></button>
+      </div>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
 </body>
 </html>
