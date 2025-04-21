@@ -34,9 +34,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 5px;
   text-align: center;
-  flex-grow: 1;
 }
 
 #playlistControls::before {
@@ -45,7 +43,27 @@ body {
   font-size: 14px;
   margin-bottom: 5px;
   color: #FFFFFF;
-  display: block;
+}
+#playlistControls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+#playlistControls::before {
+  content: "SELECT A PLAYLIST";
+  text-transform: uppercase;
+  font-size: 14px;
+  margin-bottom: 5px;
+  color: #FFFFFF;
+}
+
+#playlistControls .playlist-button-row {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  justify-content: center;
 }
 
 #playlistControls button {
