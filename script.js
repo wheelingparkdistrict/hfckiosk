@@ -137,20 +137,24 @@ function loadVideo(index) {
   const videoId = currentPlaylist[index].snippet.resourceId.videoId;
   if (isPlayerReady && player && player.loadVideoById) {
     player.loadVideoById(videoId);
+    renderPlaylistItems();
   } else {
     setTimeout(() => loadVideo(index), 200);
   }
 }
+
 
 function cueVideo(index) {
   currentVideoIndex = index;
   const videoId = currentPlaylist[index].snippet.resourceId.videoId;
   if (isPlayerReady && player && player.cueVideoById) {
     player.cueVideoById(videoId);
+    renderPlaylistItems();
   } else {
     setTimeout(() => cueVideo(index), 200);
   }
 }
+
 
 function previousVideo() {
   if (currentVideoIndex > 0) {
