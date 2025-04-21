@@ -3,7 +3,7 @@ let currentPlaylist = [];
 let currentVideoIndex = 0;
 let isPlayerReady = false;
 
-const apiKey = 'AIzaSyAF0WI0zfh8wxf4Vzu4ucKPQBG8eTGrHbo'; // Replace with your real key
+const apiKey = 'YOUR_API_KEY'; // Replace with your actual restricted key
 
 function onYouTubeIframeAPIReady() {
   player = new YT.Player('videoPlayer', {
@@ -14,42 +14,38 @@ function onYouTubeIframeAPIReady() {
       rel: 0,
       controls: 1,
       autoplay: 0,
-      enablejsapi: 1,
     },
     events: {
       onReady: () => {
         isPlayerReady = true;
         loadPlaylists();
+      }
     }
-  };
+  });
 }
 
 async function loadPlaylists() {
   const response = await fetch('data.json');
   const playlists = await response.json();
-  const container = document.getElementById('playlistControls');
+  const container = document.getElementById('playlistButtons');
 
-  const row = document.createElement('div');
-  row.id = 'playlistButtons';
-  row.style.display = 'flex';
-
-  playlists.forEach((pl, index) => {
+  playlists.forEach((pl) => {
     const btn = document.createElement('button');
     btn.textContent = pl.name;
     btn.onclick = () => loadPlaylist(pl.id);
-    row.appendChild(btn);
+    container.appendChild(btn);
     if (pl.default) loadPlaylist(pl.id);
   });
-
-  container.appendChild(row);
 }
 
 async function loadPlaylist(playlistId) {
   try {
-    const response = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${playlistId}&maxResults=50&key=${apiKey}`);
+    const response = await fetch(
+      `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${playlistId}&maxResults=50&key=${apiKey}`
+    );
     const data = await response.json();
 
-    if (!data.items) throw new Error(data.error.message || 'No videos returned');
+    if (!data.items) throw new Error(data.error?.message || 'No videos returned');
 
     currentPlaylist = data.items;
     currentVideoIndex = 0;
@@ -57,7 +53,8 @@ async function loadPlaylist(playlistId) {
     loadVideo(currentVideoIndex);
   } catch (error) {
     console.error('Failed to load playlist:', error);
-    document.getElementById('playlistVideos').innerHTML = '<p style="color:red;">Playlist failed to load.</p>';
+    document.getElementById('playlistVideos').innerHTML =
+      '<p style="color:red;">Playlist failed to load.</p>';
   }
 }
 
@@ -84,15 +81,12 @@ function renderPlaylistItems() {
 function loadVideo(index) {
   currentVideoIndex = index;
   const videoId = currentPlaylist[index].snippet.resourceId.videoId;
-
   if (isPlayerReady && player && player.loadVideoById) {
     player.loadVideoById(videoId);
   } else {
-    console.warn("Player not ready, retrying in 200ms...");
     setTimeout(() => loadVideo(index), 200);
   }
 }
-
 
 function previousVideo() {
   if (currentVideoIndex > 0) {
@@ -109,8 +103,7 @@ function nextVideo() {
 }
 
 function togglePlayPause() {
-  if (!player) return;
-
+  if (!player || !isPlayerReady) return;
   const state = player.getPlayerState();
   if (state === YT.PlayerState.PLAYING) {
     player.pauseVideo();
@@ -124,7 +117,7 @@ function adjustFontSize(step) {
   const size = parseFloat(window.getComputedStyle(pane).fontSize);
   pane.style.fontSize = `${size + step}px`;
 }
+
 function fullReload() {
   window.location.href = window.location.href;
 }
-
