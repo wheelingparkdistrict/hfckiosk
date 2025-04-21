@@ -1,3 +1,5 @@
+/* style.css - HFC Kiosk Styles */
+
 body {
   font-family: 'Montserrat', 'Helvetica', 'Arial', sans-serif;
   margin: 0;
@@ -9,8 +11,10 @@ body {
 
 #header {
   background-color: #0099A8;
+  color: #FFFFFF;
   padding: 10px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: space-between;
 }
@@ -20,10 +24,41 @@ body {
   width: auto;
 }
 
-#controls,
-#playlistControls {
+#controls, #playlistControls {
   display: flex;
   gap: 10px;
+  margin-top: 10px;
+}
+
+#playlistControls {
+  flex-direction: column;
+  align-items: center;
+}
+
+#playlistControls::before {
+  content: "Select a Playlist";
+  font-variant: small-caps;
+  font-size: 14px;
+  margin-bottom: 5px;
+  text-align: center;
+}
+
+#playlistControls button {
+  background-color: #DB8F27;
+  color: #FFFFFF;
+  border: none;
+  padding: 12px 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  transition: background-color 0.2s ease-in-out;
+  width: 150px;
+}
+
+#playlistControls button:hover {
+  background-color: #C17314;
 }
 
 button {
@@ -46,7 +81,7 @@ button:hover {
 
 #mainContent {
   display: flex;
-  height: calc(100vh - 80px);
+  height: calc(100vh - 120px);
 }
 
 #playerPane {
@@ -59,14 +94,6 @@ button:hover {
   background-color: #606261;
   overflow-y: auto;
   padding: 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-#playlistVideos {
-  flex-grow: 1;
-  overflow-y: auto;
 }
 
 .playlist-video {
@@ -91,7 +118,8 @@ button:hover {
 .playback-controls {
   display: flex;
   justify-content: space-around;
-  padding-top: 10px;
+  margin-top: 10px;
+  padding-bottom: 10px;
 }
 
 .icon-label {
