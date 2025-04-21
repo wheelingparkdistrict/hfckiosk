@@ -1,50 +1,83 @@
-<script>
-  let player;
-  const fontSizes = ["0.8rem", "1rem", "1.2rem", "1.4rem"];
-  let currentFontSize = 1;
-  let currentPlaylistId = 'PLRdkgOpCgKLCHW0LepxgvtZhCPAKpA_ph';
+// script.js - HFC Kiosk YouTube API
 
-  function onYouTubeIframeAPIReady() {
-    player = new YT.Player('player', {
-      height: '100%',
-      width: '100%',
-      playerVars: {
-        'listType': 'playlist',
-        'list': currentPlaylistId,
-        'autoplay': 0,
-        'controls': 1,
-        'modestbranding': 1,
-        'rel': 0
-      }
-    });
-  }
+let player;
+let currentPlaylist = [];
+let currentIndex = 0;
+let fontSize = 16;
 
-  document.getElementById('fontUp').onclick = () => {
-    if (currentFontSize < fontSizes.length - 1) currentFontSize++;
-    document.getElementById('playlistPane').style.fontSize = fontSizes[currentFontSize];
-  };
-
-  document.getElementById('fontDown').onclick = () => {
-    if (currentFontSize > 0) currentFontSize--;
-    document.getElementById('playlistPane').style.fontSize = fontSizes[currentFontSize];
-  };
-
-  document.getElementById('reload').onclick = () => location.reload();
-
-  function loadPlaylist(playlistId) {
-    currentPlaylistId = playlistId;
-    player.loadPlaylist({list: playlistId});
-  }
-
-  document.getElementById('playpause').onclick = () => {
-    const state = player.getPlayerState();
-    if (state === YT.PlayerState.PLAYING) {
-      player.pauseVideo();
-    } else {
-      player.playVideo();
+function onYouTubeIframeAPIReady() {
+  player = new YT.Player('player', {
+    height: '100%',
+    width: '100%',
+    playerVars: {
+      autoplay: 0,
+      modestbranding: 1,
+      controls: 1,
     }
-  };
+  });
+}
 
-  document.getElementById('prev').onclick = () => player.previousVideo();
-  document.getElementById('next').onclick = () => player.nextVideo();
-</script>
+async function loadPlaylist(playlistId) {
+  const API_KEY = "AIzaSyBXOnPb8MKxBE1pT6SYvdQdX_87350Nk9g";
+  const response = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${playlistId}&maxResults=50&key=${API_KEY}`);
+  const data = await response.json();
+
+  currentPlaylist = data.items.map(item => ({
+    videoId: item.snippet.resourceId.videoId,
+    title: item.snippet.title,
+    thumbnail: item.snippet.thumbnails.medium.url
+  }));
+
+  currentIndex = 0;
+  populatePlaylist();
+  loadVideo(currentIndex);
+}
+
+function populatePlaylist() {
+  const browser = document.getElementById('playlistBrowser');
+  browser.innerHTML = "";
+
+  currentPlaylist.forEach((video, index) => {
+    const div = document.createElement('div');
+    div.className = 'playlist-video';
+    div.onclick = () => loadVideo(index);
+    div.innerHTML = `
+      <img src="${video.thumbnail}" alt="${video.title}">
+      <span>${video.title}</span>
+    `;
+    browser.appendChild(div);
+  });
+}
+
+function loadVideo(index) {
+  currentIndex = index;
+  player.loadVideoById(currentPlaylist[currentIndex].videoId);
+}
+
+function previousVideo() {
+  if (currentIndex > 0) {
+    currentIndex--;
+    loadVideo(currentIndex);
+  }
+}
+
+function nextVideo() {
+  if (currentIndex < currentPlaylist.length - 1) {
+    currentIndex++;
+    loadVideo(currentIndex);
+  }
+}
+
+function togglePlayPause() {
+  const state = player.getPlayerState();
+  if (state === YT.PlayerState.PLAYING) {
+    player.pauseVideo();
+  } else {
+    player.playVideo();
+  }
+}
+
+function adjustFontSize(delta) {
+  fontSize = Math.min(24, Math.max(12, fontSize + delta));
+  document.getElementById('playlistPane').style.fontSize = fontSize + 'px';
+}
