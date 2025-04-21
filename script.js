@@ -1,4 +1,4 @@
-const apiKey = 'AIzaSyBXOnPb8MKxBE1pT6SYvdQdX_87350Nk9g';
+const apiKey = 'AIzaSyAF0WI0zfh8wxf4Vzu4ucKPQBG8eTGrHbo';
 let currentPlaylist = [];
 let currentVideoIndex = 0;
 
