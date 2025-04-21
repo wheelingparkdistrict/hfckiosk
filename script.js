@@ -5,7 +5,18 @@ let isPlayerReady = false;
 
 const apiKey = 'AIzaSyAF0WI0zfh8wxf4Vzu4ucKPQBG8eTGrHbo'; // Replace with your actual restricted key
 
-function onYouTubeIframeAPIReady() {
+// Dynamically load the YouTube API and initialize the player
+function loadYouTubeAPI() {
+  return new Promise((resolve) => {
+    const tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    window.onYouTubeIframeAPIReady = () => {
+      resolve();
+    };
+    document.head.appendChild(tag);
+  });
+}
+function initYouTubePlayer() {
   player = new YT.Player('videoPlayer', {
     height: '100%',
     width: '100%',
@@ -13,7 +24,7 @@ function onYouTubeIframeAPIReady() {
       modestbranding: 1,
       rel: 0,
       controls: 1,
-      autoplay: 0,
+      autoplay: 0
     },
     events: {
       onReady: () => {
@@ -24,6 +35,11 @@ function onYouTubeIframeAPIReady() {
   });
 }
 
+// Kick everything off when the page loads
+window.onload = async () => {
+  await loadYouTubeAPI();
+  initYouTubePlayer();
+};
 async function loadPlaylists() {
   const response = await fetch('data.json');
   const playlists = await response.json();
