@@ -5,7 +5,7 @@ let currentVideoIndex = 0;
 async function loadPlaylists() {
   const response = await fetch('data.json');
   const playlists = await response.json();
-  const container = document.getElementById('playlistControls');
+  const container = document.getElementById('playlistButtons');
 
   playlists.forEach((pl, index) => {
     const btn = document.createElement('button');
