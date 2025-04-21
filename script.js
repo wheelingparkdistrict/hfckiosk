@@ -1,4 +1,4 @@
-const apiKey = 'AIzaSyAF0WI0zfh8wxf4Vzu4ucKPQBG8eTGrHbo'; // Replace with your restricted API key
+ apiKey = 'AIzaSyAF0WI0zfh8wxf4Vzu4ucKPQBG8eTGrHbo'; // Replace with your restricted API key
 let currentPlaylist = [];
 let currentVideoIndex = 0;
 
@@ -59,8 +59,9 @@ function renderPlaylistItems() {
 function loadVideo(index) {
   currentVideoIndex = index;
   const videoId = currentPlaylist[index].snippet.resourceId.videoId;
-  document.getElementById('videoPlayer').src =
-    `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=0&controls=1&modestbranding=1`;
+document.getElementById('videoPlayer').src =
+  `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=0&controls=1&modestbranding=1&enablejsapi=1`;
+
 }
 
 function previousVideo() {
