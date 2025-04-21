@@ -163,13 +163,18 @@ function nextVideo() {
 
 function togglePlayPause() {
   if (!player || !isPlayerReady) return;
+  const button = document.querySelector('.playback-controls button[data-action="toggle"]');
   const state = player.getPlayerState();
+
   if (state === YT.PlayerState.PLAYING) {
     player.pauseVideo();
+    button.innerHTML = '▶<br><span class="icon-label">Play</span>';
   } else {
     player.playVideo();
+    button.innerHTML = '❚❚<br><span class="icon-label">Pause</span>';
   }
 }
+
 
 function adjustFontSize(step) {
   const pane = document.getElementById('playlistPane');
