@@ -5,27 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>HFC Kiosk</title>
   <link rel="stylesheet" href="style.css" />
+  <script src="https://www.youtube.com/iframe_api"></script>
 </head>
 <body>
   <div id="header">
     <div id="logo">
       <img src="hfc_logo.svg" alt="HFC Logo" />
     </div>
-    <div id="playlistControls">  <div class="playlist-button-row" id="playlistButtons"></div></div>
+    <div id="playlistControls">
+      <div id="playlistButtons"></div>
+    </div>
     <div id="controls">
       <button onclick="adjustFontSize(-1)">A-<span class="icon-label">Reduce Text</span></button>
       <button onclick="adjustFontSize(1)">A+<span class="icon-label">Increase Text</span></button>
-<button onclick="fullReload()">⟳<span class="icon-label">Reload</span></button>
-
-
+      <button onclick="fullReload()">⟳<span class="icon-label">Reload</span></button>
     </div>
   </div>
 
   <div id="mainContent">
     <div id="playerPane">
-<div id="videoPlayer"></div>
-
-
+      <div id="videoPlayer"></div>
     </div>
     <div id="playlistPane">
       <div id="playlistVideos"></div>
@@ -36,7 +35,6 @@
       </div>
     </div>
   </div>
-<script src="https://www.youtube.com/iframe_api"></script>
 
   <script src="script.js"></script>
 </body>
