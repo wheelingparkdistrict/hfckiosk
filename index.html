@@ -1,5 +1,162 @@
-<html>
-  <body>
-    <img src="hfc_logo.svg">
-  </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HFC Fitness Kiosk</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      background-color: #606261;
+      font-family: Arial, sans-serif;
+      color: #fff;
+      overflow: hidden;
+      height: 100vh;
+    }
+    header {
+      background-color: #0099A8;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 50px;
+    }
+    #logo {
+      height: 100%;
+    }
+    #controls button {
+      background: transparent;
+      color: #fff;
+      border: none;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+    #controls button.large {
+      font-size: 1.2rem;
+    }
+    main {
+      display: flex;
+      height: calc(100% - 50px);
+    }
+    #playerPane {
+      flex-grow: 1;
+      background: #000;
+    }
+    #playlistPane {
+      width: 300px;
+      overflow-y: auto;
+      padding: 10px;
+      background-color: rgba(0,0,0,0.3);
+      position: relative;
+    }
+    .videoItem {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+    .videoItem img {
+      width: 100px;
+      height: 56px;
+      margin-right: 10px;
+    }
+    #playbackControls {
+      position: absolute;
+      bottom: 10px;
+      left: 0;
+      width: 100%;
+      text-align: center;
+    }
+    #playbackControls button {
+      background: transparent;
+      color: #fff;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      margin: 0 10px;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <img id="logo" src="hfc_logo.svg" alt="HFC Logo">
+  <div id="controls">
+    <button id="fontDown">A-</button>
+    <button id="fontUp" class="large">A+</button>
+    <button id="reload">⟳ Reload</button>
+  </div>
+</header>
+
+<main>
+  <div id="playerPane">
+    <iframe id="player" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>
+  </div>
+  <div id="playlistPane"></div>
+</main>
+
+<script>
+  const playlists = [
+    {name: "Barre", id: "PLRdkgOpCgKLCHW0LepxgvtZhCPAKpA_ph"},
+    {name: "Full Body", id: "PLRdkgOpCgKLAMNCxMO2C1_UqUJWOxhfFG"},
+    {name: "Cardio HIIT", id: "PLRdkgOpCgKLDpQ0yMrjs_UG0YgYkR7vKl"}
+  ];
+
+  let videos = [];
+  let currentIndex = 0;
+
+  function loadPlaylist(playlistId) {
+    fetch(`https://www.youtube.com/playlist?list=${playlistId}`)
+    .then(() => {
+      const iframe = document.getElementById('player');
+      iframe.src = `https://www.youtube-nocookie.com/embed/videoseries?list=${playlistId}&autoplay=0&controls=1&modestbranding=1`;
+    });
+  }
+
+  function renderPlaylist() {
+    const pane = document.getElementById('playlistPane');
+    pane.innerHTML = '';
+    playlists.forEach(pl => {
+      const div = document.createElement('div');
+      div.className = 'videoItem';
+      div.innerHTML = `
+        <img src="https://img.youtube.com/vi/${pl.id.split(',')[0]}/mqdefault.jpg">
+        <span>${pl.name}</span>
+      `;
+      div.onclick = () => loadPlaylist(pl.id);
+      pane.appendChild(div);
+    });
+    addPlaybackControls();
+  }
+
+  function addPlaybackControls() {
+    const controls = document.createElement('div');
+    controls.id = 'playbackControls';
+    controls.innerHTML = `
+      <button id="prev">⏮️</button>
+      <button id="playpause">⏯️</button>
+      <button id="next">⏭️</button>
+    `;
+    document.getElementById('playlistPane').appendChild(controls);
+    document.getElementById('playpause').onclick = () => document.getElementById('player').contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+    document.getElementById('prev').onclick = () => document.getElementById('player').contentWindow.postMessage('{"event":"command","func":"previousVideo","args":""}', '*');
+    document.getElementById('next').onclick = () => document.getElementById('player').contentWindow.postMessage('{"event":"command","func":"nextVideo","args":""}', '*');
+  }
+
+  document.getElementById('fontUp').onclick = () => {
+    document.getElementById('playlistPane').style.fontSize = 'larger';
+  };
+
+  document.getElementById('fontDown').onclick = () => {
+    document.getElementById('playlistPane').style.fontSize = 'smaller';
+  };
+
+  document.getElementById('reload').onclick = () => location.reload();
+
+  renderPlaylist();
+  loadPlaylist(playlists[0].id);
+</script>
+
+</body>
 </html>
