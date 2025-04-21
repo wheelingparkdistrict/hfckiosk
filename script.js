@@ -1,7 +1,7 @@
 let player;
 let currentPlaylist = [];
 let currentVideoIndex = 0;
-const apiKey = 'YOUR_API_KEY'; // Replace with your actual key
+const apiKey = 'AIzaSyAF0WI0zfh8wxf4Vzu4ucKPQBG8eTGrHbo'; // Replace with your actual key
 
 // YouTube API loader
 function onYouTubeIframeAPIReady() {
