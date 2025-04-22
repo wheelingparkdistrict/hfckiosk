@@ -99,6 +99,8 @@ button:hover {
 #mainContent {
   display: flex;
   height: calc(100vh - 100px);
+  padding-bottom: 1.5rem; /* give the layout room for the footer */
+
 }
 
 #playerPane {
