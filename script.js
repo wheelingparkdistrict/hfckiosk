@@ -64,7 +64,7 @@ function formatDuration(iso) {
     container.appendChild(btn);
     if (pl.default) loadPlaylist(pl.id);
   });
-}
+
 async function fetchVideoDurations(videoIds) {
   const ids = videoIds.join(',');
   const response = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${ids}&key=${apiKey}`);
