@@ -185,3 +185,9 @@ button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+#playlistButtons button.active-playlist {
+  background-color: #C17314; /* darker or contrasting color */
+  border: 2px solid #fff;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.7);
+}
