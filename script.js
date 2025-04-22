@@ -84,7 +84,7 @@ async function loadPlaylist(playlistId) {
 
     currentPlaylist = data.items;
     currentVideoIndex = 0;
-    renderPlaylistItems();
+
     cueVideo(currentVideoIndex);
   } catch (error) {
     console.error('Failed to load playlist:', error);
