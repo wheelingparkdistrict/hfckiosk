@@ -130,12 +130,20 @@ function updateNavButtons() {
   if (prev) prev.disabled = (currentVideoIndex <= 0);
   if (next) next.disabled = (currentVideoIndex >= currentPlaylist.length - 1);
 }
+
+function updateNowPlayingHighlight() {
+  const items = document.querySelectorAll('.playlist-video');
+  items.forEach((el, index) => {
+    el.classList.toggle('now-playing', index === currentVideoIndex);
+  });
+}
+
 function loadVideo(index) {
   currentVideoIndex = index;
   const videoId = currentPlaylist[index].snippet.resourceId.videoId;
   if (isPlayerReady && player.cueVideoById) {
     player.cueVideoById(videoId);  // ✅ fixed
-    renderPlaylistItems();
+    updateNowPlayingHighlight();  // ✅ NEW
         updateNavButtons(); 
   }
 }
@@ -146,10 +154,11 @@ function cueVideo(index) {
   const videoId = currentPlaylist[index].snippet.resourceId.videoId;
   if (isPlayerReady && player.cueVideoById) {
     player.cueVideoById(videoId);
-    renderPlaylistItems();
-        updateNavButtons(); 
+    updateNowPlayingHighlight();  // ✅ NEW
+    updateNavButtons();
   }
 }
+
 
 function previousVideo() {
   if (currentVideoIndex > 0) {
