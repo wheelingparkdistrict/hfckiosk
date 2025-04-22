@@ -126,11 +126,12 @@ async function renderPlaylistItems() {
 function loadVideo(index) {
   currentVideoIndex = index;
   const videoId = currentPlaylist[index].snippet.resourceId.videoId;
-  if (isPlayerReady && player.loadVideoById) {
-    player.loadVideoById(videoId);
+  if (isPlayerReady && player.cueVideoById) {
+    player.cueVideoById(videoId);  // ✅ fixed
     renderPlaylistItems();
   }
 }
+
 
 function cueVideo(index) {
   currentVideoIndex = index;
