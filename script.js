@@ -28,16 +28,22 @@ async function loadPlaylists() {
   const response = await fetch('data.json');
   const playlists = await response.json();
   const container = document.getElementById('playlistButtons');
-async function fetchVideoDurations(videoIds) {
-  const ids = videoIds.join(',');
-  const response = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${ids}&key=${apiKey}`);
-  const data = await response.json();
-  const durations = {};
-  data.items.forEach(video => {
-    durations[video.id] = formatDuration(video.contentDetails.duration);
+
+  let playlistLoaded = false;
+
+  playlists.forEach(pl => {
+    const btn = document.createElement('button');
+    btn.textContent = pl.name;
+    btn.onclick = () => loadPlaylist(pl.id);
+    container.appendChild(btn);
+
+    if (pl.default && !playlistLoaded) {
+      loadPlaylist(pl.id);
+      playlistLoaded = true;
+    }
   });
-  return durations;
 }
+
 
 function formatDuration(iso) {
   const match = iso.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
@@ -205,4 +211,8 @@ function resetKiosk() {
   // Reload playlists
   loadPlaylists();
 }
+
+// Attach font size buttons
+document.getElementById('fontInc').addEventListener('click', () => adjustFontSize(2));
+document.getElementById('fontDec').addEventListener('click', () => adjustFontSize(-2));
 
