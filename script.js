@@ -59,8 +59,9 @@ function formatDuration(iso) {
   const totalSec = h * 3600 + m * 60 + s;
   const mins = Math.floor(totalSec / 60);
   const secs = totalSec % 60;
-  return `${mins}:${secs.toString().padStart(2, '0')}`;
+  return \`\${mins}:\${secs.toString().padStart(2, '0')}\`;
 }
+
 
 async function fetchVideoDurations(videoIds) {
   const ids = videoIds.join(',');
