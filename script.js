@@ -26,16 +26,12 @@ function onYouTubeIframeAPIReady() {
   });
 }
 
-async function loadPlaylist() {
-  if (playlistId === selectedPlaylistId && currentPlaylist.length > 0) {
-    return; // Already loaded
-  }
+async function loadPlaylists() {
   const response = await fetch('data.json');
   const playlists = await response.json();
   const container = document.getElementById('playlistButtons');
   container.innerHTML = '';
 
-  // Create buttons
   playlists.forEach(pl => {
     const btn = document.createElement('button');
     btn.textContent = pl.name;
@@ -48,13 +44,14 @@ async function loadPlaylist() {
     container.appendChild(btn);
   });
 
-  // Load the default playlist only once, outside the loop
   const defaultPl = playlists.find(p => p.default);
   if (defaultPl) {
     selectedPlaylistId = defaultPl.id;
     loadPlaylist(defaultPl.id);
   }
 }
+
+
 async function loadPlaylist(playlistId) {
   try {
     const response = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?...`);
