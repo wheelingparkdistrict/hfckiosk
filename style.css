@@ -191,3 +191,15 @@ button:disabled {
   border: 2px solid #fff;
   box-shadow: 0 0 6px rgba(255, 255, 255, 0.7);
 }
+
+#kioskFooter {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  font-size: 0.75rem;
+  color: #ffffffa0;
+  padding: 4px 0;
+  background: transparent;
+  pointer-events: none; /* makes it unclickable, preserves UX */
+}
