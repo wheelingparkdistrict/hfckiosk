@@ -29,19 +29,25 @@ async function loadPlaylists() {
   const playlists = await response.json();
   const container = document.getElementById('playlistButtons');
 
-  let playlistLoaded = false;
+let currentPlaylistId = null;
 
-  playlists.forEach(pl => {
-    const btn = document.createElement('button');
-    btn.textContent = pl.name;
-    btn.onclick = () => loadPlaylist(pl.id);
-    container.appendChild(btn);
-
-    if (pl.default && !playlistLoaded) {
+playlists.forEach(pl => {
+  const btn = document.createElement('button');
+  btn.textContent = pl.name;
+  btn.onclick = () => {
+    if (currentPlaylistId !== pl.id) {
+      currentPlaylistId = pl.id;
       loadPlaylist(pl.id);
-      playlistLoaded = true;
     }
-  });
+  };
+  container.appendChild(btn);
+
+  if (pl.default && currentPlaylistId === null) {
+    currentPlaylistId = pl.id;
+    loadPlaylist(pl.id);
+  }
+});
+
 }
 
 
