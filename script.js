@@ -30,6 +30,8 @@ async function loadPlaylists() {
   const playlists = await response.json();
   const container = document.getElementById('playlistButtons');
 
+  container.innerHTML = ''; 
+  
   let currentPlaylistId = null;
 
   playlists.forEach(pl => {
@@ -173,6 +175,12 @@ function togglePlayPause() {
 
 function adjustFontSize(step) {
   const pane = document.getElementById('playlistPane');
+  if (!pane) {
+    console.warn('playlistPane not found');
+    return;
+  }
+ 
+  
   const size = parseFloat(window.getComputedStyle(pane).fontSize);
   const newSize = Math.min(Math.max(size + step, 12), 24);
   pane.style.fontSize = `${newSize}px`;
