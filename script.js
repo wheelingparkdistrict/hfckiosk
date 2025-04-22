@@ -121,8 +121,11 @@ currentPlaylist.forEach((item, index) => {
   div.innerHTML = `
     <img src="${thumb}" alt="${title}" style="width: 120px;">
     <div class="video-info">
-      <span class="video-title">${title}</span>
-      <span class="video-duration">${duration}</span>
+<div class="video-info">
+  <span class="video-title">${title}</span><br>
+  <span class="video-duration">${duration}</span>
+</div>
+
     </div>
   `;
   div.onclick = () => loadVideo(index);
