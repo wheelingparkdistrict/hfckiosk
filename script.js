@@ -30,7 +30,7 @@ async function loadPlaylists() {
   const response = await fetch('data.json');
   const playlists = await response.json();
   const container = document.getElementById('playlistButtons');
-  container.innerHTML = ''; // Clear buttons
+  container.innerHTML = '';
 
   playlists.forEach(pl => {
     const btn = document.createElement('button');
@@ -59,12 +59,12 @@ function formatDuration(iso) {
   const totalSec = h * 3600 + m * 60 + s;
   const mins = Math.floor(totalSec / 60);
   const secs = totalSec % 60;
-  return \`\${mins}:\${secs.toString().padStart(2, '0')}\`;
+  return `${mins}:${secs.toString().padStart(2, '0')}`;
 }
 
 async function fetchVideoDurations(videoIds) {
   const ids = videoIds.join(',');
-  const response = await fetch(\`https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=\${ids}&key=\${apiKey}\`);
+  const response = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${ids}&key=${apiKey}`);
   const data = await response.json();
   const durations = {};
   data.items.forEach(video => {
@@ -75,7 +75,7 @@ async function fetchVideoDurations(videoIds) {
 
 async function loadPlaylist(playlistId) {
   try {
-    const response = await fetch(\`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=\${playlistId}&maxResults=50&key=\${apiKey}\`);
+    const response = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${playlistId}&maxResults=50&key=${apiKey}`);
     const data = await response.json();
     if (!data.items) throw new Error(data.error?.message || 'No videos returned');
 
@@ -108,13 +108,13 @@ async function renderPlaylistItems() {
       div.classList.add('now-playing');
     }
 
-    div.innerHTML = \`
-      <img src="\${thumb}" alt="\${title}" style="width: 120px;">
+    div.innerHTML = `
+      <img src="${thumb}" alt="${title}" style="width: 120px;">
       <div class="video-info">
-        <div class="video-title">\${title}</div>
-        <div class="video-duration">\${duration}</div>
+        <div class="video-title">${title}</div>
+        <div class="video-duration">${duration}</div>
       </div>
-    \`;
+    `;
     div.onclick = () => loadVideo(index);
     container.appendChild(div);
   });
