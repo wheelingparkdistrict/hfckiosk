@@ -193,13 +193,14 @@ button:disabled {
 }
 
 #kioskFooter {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   width: 100%;
   text-align: center;
   font-size: 0.75rem;
   color: #ffffffa0;
   padding: 4px 0;
-  background: transparent;
-  pointer-events: none; /* makes it unclickable, preserves UX */
+  background: #606261;
+  z-index: 10;                 /* sit above the video player */
+  pointer-events: none;
 }
