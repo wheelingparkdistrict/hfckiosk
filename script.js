@@ -51,16 +51,6 @@ async function loadPlaylists() {
   }
 }
 
-
-async function loadPlaylist(playlistId) {
-  try {
-    const response = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?...`);
-    ...
-  } catch (error) {
-    ...
-  }
-}
-
 function formatDuration(iso) {
   const match = iso.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
   const h = parseInt(match[1]) || 0;
