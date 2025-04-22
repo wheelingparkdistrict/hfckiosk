@@ -1,3 +1,4 @@
+
 let player;
 let currentPlaylist = [];
 let currentVideoIndex = 0;
@@ -29,38 +30,24 @@ async function loadPlaylists() {
   const playlists = await response.json();
   const container = document.getElementById('playlistButtons');
 
-let currentPlaylistId = null;
+  let currentPlaylistId = null;
 
-playlists.forEach(pl => {
-  const btn = document.createElement('button');
-  btn.textContent = pl.name;
-  btn.onclick = () => {
-    if (currentPlaylistId !== pl.id) {
+  playlists.forEach(pl => {
+    const btn = document.createElement('button');
+    btn.textContent = pl.name;
+    btn.onclick = () => {
+      if (currentPlaylistId !== pl.id) {
+        currentPlaylistId = pl.id;
+        loadPlaylist(pl.id);
+      }
+    };
+    container.appendChild(btn);
+
+    if (pl.default && currentPlaylistId === null) {
       currentPlaylistId = pl.id;
       loadPlaylist(pl.id);
     }
-  };
-  container.appendChild(btn);
-
-  if (pl.default && currentPlaylistId === null) {
-    currentPlaylistId = pl.id;
-    loadPlaylist(pl.id);
-  }
-});
-
-}
-
-;
-
-async function fetchVideoDurations(videoIds) {
-  const ids = videoIds.join(',');
-  const response = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${ids}&key=${apiKey}`);
-  const data = await response.json();
-  const durations = {};
-  data.items.forEach(video => {
-    durations[video.id] = formatDuration(video.contentDetails.duration);
   });
-  return durations;
 }
 
 function formatDuration(iso) {
@@ -73,6 +60,17 @@ function formatDuration(iso) {
   const mins = Math.floor(totalSec / 60);
   const secs = totalSec % 60;
   return `${mins}:${secs.toString().padStart(2, '0')}`;
+}
+
+async function fetchVideoDurations(videoIds) {
+  const ids = videoIds.join(',');
+  const response = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${ids}&key=${apiKey}`);
+  const data = await response.json();
+  const durations = {};
+  data.items.forEach(video => {
+    durations[video.id] = formatDuration(video.contentDetails.duration);
+  });
+  return durations;
 }
 
 async function loadPlaylist(playlistId) {
@@ -99,34 +97,29 @@ async function renderPlaylistItems() {
   const videoIds = currentPlaylist.map(item => item.snippet.resourceId.videoId);
   const durations = await fetchVideoDurations(videoIds);
 
-currentPlaylist.forEach((item, index) => {
-  const videoId = item.snippet.resourceId.videoId;
-  const title = item.snippet.title;
-  const thumb = item.snippet.thumbnails.medium.url;
-  const duration = durations[videoId] || '';
+  currentPlaylist.forEach((item, index) => {
+    const videoId = item.snippet.resourceId.videoId;
+    const title = item.snippet.title;
+    const thumb = item.snippet.thumbnails.medium.url;
+    const duration = durations[videoId] || '';
 
-  const div = document.createElement('div');
-  div.className = 'playlist-video';
-  if (index === currentVideoIndex) {
-    div.classList.add('now-playing');
-  }
+    const div = document.createElement('div');
+    div.className = 'playlist-video';
+    if (index === currentVideoIndex) {
+      div.classList.add('now-playing');
+    }
 
-  div.innerHTML = `
-    <img src="${thumb}" alt="${title}" style="width: 120px;">
-    <div class="video-info">
-  <div class="video-title">${title}</div>
-  <div class="video-duration">${duration}</div>
-</div>
-
-
-    </div>
-  `;
-  div.onclick = () => loadVideo(index);
-  container.appendChild(div);
-});
-
+    div.innerHTML = `
+      <img src="${thumb}" alt="${title}" style="width: 120px;">
+      <div class="video-info">
+        <div class="video-title">${title}</div>
+        <div class="video-duration">${duration}</div>
+      </div>
+    `;
+    div.onclick = () => loadVideo(index);
+    container.appendChild(div);
+  });
 }
-
 
 function loadVideo(index) {
   currentVideoIndex = index;
@@ -139,7 +132,6 @@ function loadVideo(index) {
   }
 }
 
-
 function cueVideo(index) {
   currentVideoIndex = index;
   const videoId = currentPlaylist[index].snippet.resourceId.videoId;
@@ -150,7 +142,6 @@ function cueVideo(index) {
     setTimeout(() => cueVideo(index), 200);
   }
 }
-
 
 function previousVideo() {
   if (currentVideoIndex > 0) {
@@ -180,7 +171,6 @@ function togglePlayPause() {
   }
 }
 
-
 function adjustFontSize(step) {
   const pane = document.getElementById('playlistPane');
   const size = parseFloat(window.getComputedStyle(pane).fontSize);
@@ -189,12 +179,9 @@ function adjustFontSize(step) {
 }
 
 function resetKiosk() {
-  // Clear existing UI
   document.getElementById('playlistButtons').innerHTML = '';
   document.getElementById('playlistVideos').innerHTML = '';
   document.getElementById('playlistPane').style.fontSize = '16px';
-
-  // Reload playlists
   loadPlaylists();
 }
 
