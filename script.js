@@ -82,8 +82,11 @@ async function loadPlaylist(playlistId) {
     const data = await response.json();
     if (!data.items) throw new Error(data.error?.message || 'No videos returned');
 
-    currentPlaylist = data.items;
-    currentVideoIndex = 0;
+currentPlaylist = data.items;
+currentVideoIndex = 0;
+renderPlaylistItems();            // ✅ renders sidebar
+cueVideo(currentVideoIndex);      // ✅ updates player and highlights
+
     
 
     cueVideo(currentVideoIndex);
