@@ -84,6 +84,7 @@ async function loadPlaylist(playlistId) {
 
     currentPlaylist = data.items;
     currentVideoIndex = 0;
+    
 
     cueVideo(currentVideoIndex);
   } catch (error) {
@@ -129,6 +130,7 @@ function loadVideo(index) {
   if (isPlayerReady && player.cueVideoById) {
     player.cueVideoById(videoId);  // ✅ fixed
     renderPlaylistItems();
+        updateNavButtons(); 
   }
 }
 
@@ -139,6 +141,7 @@ function cueVideo(index) {
   if (isPlayerReady && player.cueVideoById) {
     player.cueVideoById(videoId);
     renderPlaylistItems();
+        updateNavButtons(); 
   }
 }
 
@@ -176,6 +179,7 @@ function resetKiosk() {
   document.documentElement.style.fontSize = '100%';
   selectedPlaylistId = null;
   loadPlaylists();
+      updateNavButtons(); 
 }
 
 function adjustFontSize(stepPercent) {
