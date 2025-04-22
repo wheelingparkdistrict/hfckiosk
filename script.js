@@ -17,13 +17,15 @@ function onYouTubeIframeAPIReady() {
       controls: 1,
       autoplay: 0,
     },
-    events: {
-      onReady: () => {
-        isPlayerReady = true;
-        loadPlaylists();
-      }
+events: {
+  onReady: () => {
+    isPlayerReady = true;
+    loadPlaylists();
+  },
+  onStateChange: onPlayerStateChange  // ✅ add this
+}
     }
-  });
+  );
 }
 
 async function loadPlaylists() {
@@ -207,6 +209,16 @@ function adjustFontSize(stepPercent) {
   html.style.fontSize = newSize + 'px';
 }
 
+function onPlayerStateChange(event) {
+  const button = document.querySelector('.playback-controls button[data-action="toggle"]');
+  if (!button) return;
+
+  if (event.data === YT.PlayerState.PLAYING) {
+    button.innerHTML = '❚❚<br><span class="icon-label">Pause</span>';
+  } else if (event.data === YT.PlayerState.PAUSED || event.data === YT.PlayerState.CUED) {
+    button.innerHTML = '▶<br><span class="icon-label">Play</span>';
+  }
+}
 
 document.addEventListener('DOMContentLoaded', () => {
   const decBtn = document.getElementById('fontDec');
