@@ -188,6 +188,13 @@ function adjustFontSize(stepPercent) {
   const newSize = Math.max(12, Math.min(40, current * (1 + stepPercent / 100)));
   html.style.fontSize = newSize + 'px';
 }
+function updateNavButtons() {
+  const prev = document.getElementById('prevBtn');
+  const next = document.getElementById('nextBtn');
+
+  if (prev) prev.disabled = (currentVideoIndex <= 0);
+  if (next) next.disabled = (currentVideoIndex >= currentPlaylist.length - 1);
+}
 
 document.addEventListener('DOMContentLoaded', () => {
   const decBtn = document.getElementById('fontDec');
