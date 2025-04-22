@@ -26,7 +26,7 @@ function onYouTubeIframeAPIReady() {
   });
 }
 
-async function loadPlaylist(playlistId) {
+async function loadPlaylist() {
   if (playlistId === selectedPlaylistId && currentPlaylist.length > 0) {
     return; // Already loaded
   }
@@ -53,6 +53,14 @@ async function loadPlaylist(playlistId) {
   if (defaultPl) {
     selectedPlaylistId = defaultPl.id;
     loadPlaylist(defaultPl.id);
+  }
+}
+async function loadPlaylist(playlistId) {
+  try {
+    const response = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?...`);
+    ...
+  } catch (error) {
+    ...
   }
 }
 
