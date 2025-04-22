@@ -31,6 +31,7 @@ events: {
 async function loadPlaylists() {
   const response = await fetch('data.json');
   const playlists = await response.json();
+  window.loadedPlaylists = playlists;
   const container = document.getElementById('playlistButtons');
   container.innerHTML = '';
 
@@ -40,6 +41,7 @@ async function loadPlaylists() {
     btn.onclick = () => {
       if (selectedPlaylistId !== pl.id) {
         selectedPlaylistId = pl.id;
+            highlightSelectedPlaylistButton(pl.id); // ✅ NEW
         loadPlaylist(pl.id);
       }
     };
@@ -219,6 +221,22 @@ function onPlayerStateChange(event) {
     button.innerHTML = '▶<br><span class="icon-label">Play</span>';
   }
 }
+
+function highlightSelectedPlaylistButton(activeId) {
+  const buttons = document.querySelectorAll('#playlistButtons button');
+  buttons.forEach(btn => {
+    btn.classList.remove('active-playlist');
+    if (btn.textContent.trim() === getPlaylistNameById(activeId)) {
+      btn.classList.add('active-playlist');
+    }
+  });
+}
+
+function getPlaylistNameById(id) {
+  const pl = window.loadedPlaylists?.find(p => p.id === id);
+  return pl ? pl.name : '';
+}
+
 
 document.addEventListener('DOMContentLoaded', () => {
   const decBtn = document.getElementById('fontDec');
