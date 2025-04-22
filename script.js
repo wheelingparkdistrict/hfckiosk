@@ -122,9 +122,10 @@ currentPlaylist.forEach((item, index) => {
     <img src="${thumb}" alt="${title}" style="width: 120px;">
     <div class="video-info">
 <div class="video-info">
-  <span class="video-title">${title}</span><br>
-  <span class="video-duration">${duration}</span>
+  <div class="video-title">${title}</div>
+  <div class="video-duration">${duration}</div>
 </div>
+
 
     </div>
   `;
