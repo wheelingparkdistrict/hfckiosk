@@ -222,3 +222,10 @@ function resetKiosk() {
 document.getElementById('fontInc').addEventListener('click', () => adjustFontSize(2));
 document.getElementById('fontDec').addEventListener('click', () => adjustFontSize(-2));
 
+document.addEventListener('DOMContentLoaded', () => {
+  const incBtn = document.getElementById('fontInc');
+  const decBtn = document.getElementById('fontDec');
+
+  if (incBtn) incBtn.addEventListener('click', () => adjustFontSize(2));
+  if (decBtn) decBtn.addEventListener('click', () => adjustFontSize(-2));
+});
