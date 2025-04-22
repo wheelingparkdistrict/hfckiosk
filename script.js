@@ -26,12 +26,16 @@ function onYouTubeIframeAPIReady() {
   });
 }
 
-async function loadPlaylists() {
+async function loadPlaylist(playlistId) {
+  if (playlistId === selectedPlaylistId && currentPlaylist.length > 0) {
+    return; // Already loaded
+  }
   const response = await fetch('data.json');
   const playlists = await response.json();
   const container = document.getElementById('playlistButtons');
   container.innerHTML = '';
 
+  // Create buttons
   playlists.forEach(pl => {
     const btn = document.createElement('button');
     btn.textContent = pl.name;
@@ -42,12 +46,14 @@ async function loadPlaylists() {
       }
     };
     container.appendChild(btn);
-
-    if (pl.default && selectedPlaylistId === null) {
-      selectedPlaylistId = pl.id;
-      loadPlaylist(pl.id);
-    }
   });
+
+  // Load the default playlist only once, outside the loop
+  const defaultPl = playlists.find(p => p.default);
+  if (defaultPl) {
+    selectedPlaylistId = defaultPl.id;
+    loadPlaylist(defaultPl.id);
+  }
 }
 
 function formatDuration(iso) {
