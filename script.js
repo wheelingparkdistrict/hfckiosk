@@ -29,6 +29,7 @@ async function loadPlaylists() {
   const response = await fetch('data.json');
   const playlists = await response.json();
   const container = document.getElementById('videoList');
+  if (!container) return;
   container.innerHTML = ''; // Prevent duplication
 
   const defaultPlaylist = playlists.find(p => p.default);
@@ -42,6 +43,7 @@ async function loadPlaylists() {
 
 function updateVideoList() {
   const container = document.getElementById('videoList');
+  if (!container) return;
   container.innerHTML = ''; // Clear previous entries
 
   currentPlaylist.forEach((video, index) => {
@@ -77,34 +79,55 @@ function loadVideo(videoId) {
   }
 }
 
-document.getElementById('prevBtn').addEventListener('click', () => {
-  if (currentVideoIndex > 0) {
-    currentVideoIndex--;
-    loadVideo(currentPlaylist[currentVideoIndex].id);
-    updateVideoList();
+document.addEventListener('DOMContentLoaded', () => {
+  const prevBtn = document.getElementById('prevBtn');
+  const playBtn = document.getElementById('playBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const fontInc = document.getElementById('fontInc');
+  const fontDec = document.getElementById('fontDec');
+  const resetBtn = document.getElementById('resetBtn');
+
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+      if (currentVideoIndex > 0) {
+        currentVideoIndex--;
+        loadVideo(currentPlaylist[currentVideoIndex].id);
+        updateVideoList();
+      }
+    });
   }
-});
 
-document.getElementById('playBtn').addEventListener('click', () => {
-  if (isPlayerReady && player.playVideo) player.playVideo();
-});
-
-document.getElementById('nextBtn').addEventListener('click', () => {
-  if (currentVideoIndex < currentPlaylist.length - 1) {
-    currentVideoIndex++;
-    loadVideo(currentPlaylist[currentVideoIndex].id);
-    updateVideoList();
+  if (playBtn) {
+    playBtn.addEventListener('click', () => {
+      if (isPlayerReady && player.playVideo) player.playVideo();
+    });
   }
-});
 
-document.getElementById('fontInc').addEventListener('click', () => {
-  document.body.style.fontSize = (parseFloat(getComputedStyle(document.body).fontSize) + 1) + 'px';
-});
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      if (currentVideoIndex < currentPlaylist.length - 1) {
+        currentVideoIndex++;
+        loadVideo(currentPlaylist[currentVideoIndex].id);
+        updateVideoList();
+      }
+    });
+  }
 
-document.getElementById('fontDec').addEventListener('click', () => {
-  document.body.style.fontSize = (parseFloat(getComputedStyle(document.body).fontSize) - 1) + 'px';
-});
+  if (fontInc) {
+    fontInc.addEventListener('click', () => {
+      document.body.style.fontSize = (parseFloat(getComputedStyle(document.body).fontSize) + 1) + 'px';
+    });
+  }
 
-document.getElementById('resetBtn').addEventListener('click', () => {
-  location.reload();
+  if (fontDec) {
+    fontDec.addEventListener('click', () => {
+      document.body.style.fontSize = (parseFloat(getComputedStyle(document.body).fontSize) - 1) + 'px';
+    });
+  }
+
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      location.reload();
+    });
+  }
 });
