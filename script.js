@@ -51,6 +51,7 @@ async function loadPlaylists() {
   const defaultPl = playlists.find(p => p.default);
   if (defaultPl) {
     selectedPlaylistId = defaultPl.id;
+    highlightSelectedPlaylistButton(defaultPl.id);
     loadPlaylist(defaultPl.id);
   }
 }
