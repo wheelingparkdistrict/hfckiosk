@@ -147,11 +147,13 @@ button:hover {
 .video-title {
   font-weight: bold;
   font-size: 0.95rem;
+  display: block;
 }
 
 .video-duration {
   font-size: 0.8rem;
   color: #ddd;
+  display: block;
 }
 .playback-controls {
   display: flex;
