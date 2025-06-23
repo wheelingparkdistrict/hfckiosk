@@ -13,5 +13,10 @@
     "name": "Cardio HIIT",
     "id": "PLRdkgOpCgKLDpQ0yMrjs_UG0YgYkR7vKl",
     "default": false
+  },
+  {
+    "name": "Yoga",
+    "id": "PLRdkgOpCgKLA999b3hLbCHPG3RpzmEm30",
+    "default": false
   }
 ]
